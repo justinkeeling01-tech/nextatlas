@@ -770,6 +770,9 @@ function sub(){
   emailEl.disabled = true;
 
   setTimeout(function(){
+    emailEl.value = '';
+    emailEl.disabled = false;
+
     var nlForm = document.querySelector('.nl-form');
     if(nlForm) nlForm.style.display = 'none';
 
@@ -783,15 +786,12 @@ function sub(){
       title.textContent = 'You are in.';
       var body = document.createElement('div');
       body.style.cssText = 'font-size:14px;color:#777;line-height:1.7;';
-      body.textContent = 'Welcome to NextAtlas Weekly. Check your inbox for a confirmation email.';
+      body.textContent = 'Welcome to NextAtlas Weekly. First issue drops soon.';
       msg.appendChild(title);
       msg.appendChild(body);
       success.innerHTML = '';
       success.appendChild(msg);
     }
-
-    // Silently open Beehiiv in background so they get added to the list
-    window.open('https://nextatlas.beehiiv.com/subscribe?email=' + encodeURIComponent(email), '_blank');
   }, 800);
 }
 </script>
