@@ -208,9 +208,12 @@ footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-i
     <p class="nl-p">Every week: the most important funding rounds, emerging startups, and market shifts &mdash; curated so you don't have to dig. No noise. Just signal.</p>
     <div class="nl-form">
       <input type="email" class="nl-in" placeholder="your@email.com" id="nl-email">
-      <button class="nl-btn" onclick="sub()">Subscribe Free</button>
+      <button class="nl-btn" id="nl-btn" onclick="sub()">Subscribe Free</button>
     </div>
-    <p class="nl-fine">Free forever &nbsp;&middot;&nbsp; No spam &nbsp;&middot;&nbsp; Unsubscribe anytime &nbsp;&middot;&nbsp; Powered by Beehiiv</p>
+    <div id="nl-success" style="display:none;margin-top:16px;padding:12px 20px;background:rgba(168,213,162,0.1);border:1px solid rgba(168,213,162,0.3);border-radius:8px;color:#A8D5A2;font-size:13px;">
+      You're subscribed to NextAtlas Weekly. Check your inbox for a welcome email.
+    </div>
+    <p class="nl-fine" style="margin-top:14px">Free forever &nbsp;&middot;&nbsp; No spam &nbsp;&middot;&nbsp; Unsubscribe anytime</p>
   </div>
 </section>
 
@@ -680,33 +683,54 @@ drawGlobe();
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>50));
 function goto(id,btn){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth'});}
 
-async function sub(){
-  const emailEl=document.getElementById('nl-email');
-  const email=emailEl.value.trim();
-  if(!email||!email.includes('@')){emailEl.style.borderColor='#FF6B6B';return;}
-  const btn=document.querySelector('.nl-btn');
-  btn.textContent='Subscribing...';btn.disabled=true;
-  try{
-    // Beehiiv embed subscription via their public subscribe URL
-    const form=document.createElement('form');
-    form.method='POST';
-    form.action='https://nextatlas.beehiiv.com/subscribe';
-    form.target='_blank';
-    form.style.display='none';
-    const inp=document.createElement('input');
-    inp.name='email';inp.value=email;
-    form.appendChild(inp);
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-    emailEl.value='';
-    btn.textContent='Subscribed!';
-    btn.style.background='#5BC8C0';
-    setTimeout(()=>{btn.textContent='Subscribe Free';btn.style.background='';btn.disabled=false;},3000);
-  }catch(err){
-    btn.textContent='Subscribe Free';btn.disabled=false;
-    alert('Something went wrong. Please try again.');
+function sub(){
+  const emailEl = document.getElementById('nl-email');
+  const btn = document.getElementById('nl-btn');
+  const email = emailEl.value.trim();
+
+  if(!email || !email.includes('@') || !email.includes('.')){
+    emailEl.style.borderColor = '#FF6B6B';
+    emailEl.style.boxShadow = '0 0 0 2px rgba(255,107,107,0.15)';
+    setTimeout(()=>{emailEl.style.borderColor='';emailEl.style.boxShadow='';}, 2000);
+    return;
   }
+
+  // Open Beehiiv in a modal overlay — keeps user on the site
+  const overlay = document.createElement('div');
+  overlay.id = 'bh-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);';
+
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#0e0e0e;border:1px solid rgba(168,213,162,0.2);border-radius:16px;width:90%;max-width:520px;overflow:hidden;position:relative;';
+
+  const close = document.createElement('button');
+  close.innerHTML = '&#x2715;';
+  close.style.cssText = 'position:absolute;top:14px;right:16px;background:none;border:none;color:#777;font-size:18px;cursor:pointer;z-index:1;';
+  close.onclick = () => document.body.removeChild(overlay);
+
+  const frame = document.createElement('iframe');
+  frame.src = 'https://nextatlas.beehiiv.com/subscribe?email=' + encodeURIComponent(email);
+  frame.style.cssText = 'width:100%;height:500px;border:none;display:block;';
+  frame.allow = 'fullscreen';
+
+  box.appendChild(close);
+  box.appendChild(frame);
+  overlay.appendChild(box);
+
+  // Close on background click
+  overlay.addEventListener('click', e => { if(e.target === overlay) document.body.removeChild(overlay); });
+  document.addEventListener('keydown', e => { if(e.key==='Escape' && document.getElementById('bh-overlay')) document.body.removeChild(overlay); });
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+  overlay.addEventListener('remove', () => document.body.style.overflow = '');
+
+  // Also show success state on the page
+  setTimeout(()=>{
+    emailEl.value = '';
+    btn.style.display = 'none';
+    document.getElementById('nl-success').style.display = 'block';
+  }, 800);
 }
 </script>
 </body>
