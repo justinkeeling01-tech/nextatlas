@@ -130,6 +130,30 @@ footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-i
 .mweb:hover{border-color:var(--g);background:rgba(168,213,162,.05)}
 @keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:900px){nav{padding:14px 20px}nav.scrolled{padding:10px 20px}.wrap{padding:0 20px}.sec{padding:60px 0}.nav-tabs{display:none}.picks-grid,.cat-grid{grid-template-columns:1fr}.mfacts{grid-template-columns:1fr}.mhd,.mbody{padding:24px}.stats-bar{grid-template-columns:1fr 1fr}footer{flex-direction:column;gap:18px;padding:32px 20px;text-align:center}}
+
+/* NEWSLETTER ISSUES */
+#issues { border-top: 1px solid var(--border); }
+.issues-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.issue-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px; text-decoration: none; display: block;
+  transition: all 0.22s; position: relative; overflow: hidden;
+}
+.issue-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--g), transparent);
+  opacity: 0; transition: opacity 0.22s;
+}
+.issue-card:hover { border-color: var(--borderg); transform: translateY(-3px); }
+.issue-card:hover::before { opacity: 1; }
+.issue-num { font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--g); margin-bottom: 12px; display: block; }
+.issue-title { font-family: var(--serif); font-size: 19px; font-weight: 400; color: var(--white); line-height: 1.35; margin-bottom: 12px; letter-spacing: -0.01em; }
+.issue-summary { font-size: 12px; color: var(--mid); line-height: 1.6; margin-bottom: 18px; font-weight: 300; }
+.issue-foot { display: flex; align-items: center; justify-content: space-between; }
+.issue-date { font-size: 11px; color: var(--dim); letter-spacing: 0.05em; }
+.issue-read { font-size: 11px; color: var(--g); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+.issue-card:hover .issue-read { text-decoration: underline; }
+.issues-empty { text-align: center; padding: 60px; color: var(--mid); font-size: 14px; grid-column: 1/-1; }
 </style>
 </head>
 <body>
@@ -143,7 +167,7 @@ footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-i
     <button class="ntab on" onclick="goto('picks',this)">Top Picks</button>
     <button class="ntab" onclick="goto('database',this)">Database</button>
     <button class="ntab" onclick="goto('categories',this)">Categories</button>
-    <button class="ntab" onclick="goto('nl-sec',this)">Newsletter</button>
+    <button class="ntab" onclick="goto('issues',this)">Newsletter</button>
   </div>
   <div class="nav-r">
     <span class="nav-count" id="nav-count">100+ companies tracked</span>
@@ -196,6 +220,17 @@ footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-i
   </div>
   <div class="db-grid" id="db-grid"></div>
   <button class="load-more" id="lmbtn" style="display:none" onclick="loadMore()">Load more</button>
+</div></div></div>
+
+<div id="issues"><div class="rule"></div>
+<div class="wrap"><div class="sec">
+  <div class="sec-hd">
+    <div><span class="sec-eyebrow">Newsletter Archive</span><h2 class="sec-t">Past Issues</h2></div>
+    <a href="https://nextatlas.beehiiv.com" target="_blank" class="sec-more">View on Beehiiv &rarr;</a>
+  </div>
+  <div class="issues-grid" id="issues-grid">
+    <!-- Issues loaded from ISSUES data below -->
+  </div>
 </div></div></div>
 
 <section id="nl-sec">
@@ -679,6 +714,42 @@ function drawGlobe(){
   requestAnimationFrame(drawGlobe);
 }
 drawGlobe();
+
+
+// ── NEWSLETTER ISSUES ──
+// To add a new issue: add an object to this array with title, summary, date, url, and issue number.
+// The url should be the direct Beehiiv link to that issue.
+const ISSUES = [
+  {
+    num: 1,
+    title: "Issue #1 — Kalshi hits $1B weekly volume, OpenAI raises $40B, and the legal AI race",
+    summary: "This week: Kalshi surpasses $1B in weekly trading volume — up 1,000% from last year. OpenAI closes the largest private funding round in history at $40B. And Harvey AI quietly becomes the legal platform of choice for the world's top law firms.",
+    date: "March 14, 2026",
+    url: "https://nextatlas.beehiiv.com"
+  }
+];
+
+function renderIssues() {
+  const grid = document.getElementById('issues-grid');
+  if (!ISSUES.length) {
+    grid.innerHTML = '<div class="issues-empty">First issue coming soon. Subscribe below to get it in your inbox.</div>';
+    return;
+  }
+  // Sort newest first
+  const sorted = [...ISSUES].sort((a,b) => b.num - a.num);
+  grid.innerHTML = sorted.map(issue => `
+    <a class="issue-card" href="${issue.url}" target="_blank">
+      <span class="issue-num">Issue #${issue.num}</span>
+      <div class="issue-title">${issue.title.replace(/^Issue #\d+ — /, '')}</div>
+      <div class="issue-summary">${issue.summary}</div>
+      <div class="issue-foot">
+        <span class="issue-date">${issue.date}</span>
+        <span class="issue-read">Read on Beehiiv &rarr;</span>
+      </div>
+    </a>
+  `).join('');
+}
+renderIssues();
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>50));
 function goto(id,btn){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth'});}
