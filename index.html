@@ -245,9 +245,7 @@ footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-i
       <input type="email" class="nl-in" placeholder="your@email.com" id="nl-email">
       <button class="nl-btn" id="nl-btn" onclick="sub()">Subscribe Free</button>
     </div>
-    <div id="nl-success" style="display:none;margin-top:16px;padding:12px 20px;background:rgba(168,213,162,0.1);border:1px solid rgba(168,213,162,0.3);border-radius:8px;color:#A8D5A2;font-size:13px;">
-      You're subscribed to NextAtlas Weekly. Check your inbox for a welcome email.
-    </div>
+    <div id="nl-success" style="display:none;margin-top:16px;"></div>
     <p class="nl-fine" style="margin-top:14px">Free forever &nbsp;&middot;&nbsp; No spam &nbsp;&middot;&nbsp; Unsubscribe anytime</p>
   </div>
 </section>
@@ -759,9 +757,9 @@ function sub(){
   var btn = document.getElementById('nl-btn');
   var email = emailEl.value.trim();
 
-  if(!email || !email.includes('@') || !email.includes('.')){
+  if(!email || email.indexOf('@') < 0 || email.indexOf('.') < 0){
     emailEl.style.borderColor = '#FF6B6B';
-    setTimeout(function(){ emailEl.style.borderColor=''; }, 2000);
+    setTimeout(function(){ emailEl.style.borderColor = ''; }, 2000);
     return;
   }
 
@@ -772,27 +770,33 @@ function sub(){
   setTimeout(function(){
     emailEl.value = '';
     emailEl.disabled = false;
+    btn.disabled = false;
+    btn.textContent = 'Subscribe Free';
 
     var nlForm = document.querySelector('.nl-form');
-    if(nlForm) nlForm.style.display = 'none';
+    if(nlForm){ nlForm.style.display = 'none'; }
+
+    var fine = document.querySelector('.nl-fine');
+    if(fine){ fine.style.display = 'none'; }
 
     var success = document.getElementById('nl-success');
     if(success){
       success.style.display = 'block';
-      var msg = document.createElement('div');
-      msg.style.cssText = 'padding:28px;background:rgba(168,213,162,0.06);border:1px solid rgba(168,213,162,0.2);border-radius:12px;text-align:center;';
+      success.style.cssText = 'display:block;padding:28px;background:rgba(168,213,162,0.06);border:1px solid rgba(168,213,162,0.2);border-radius:12px;text-align:center;margin-top:0;';
+
       var title = document.createElement('div');
-      title.style.cssText = 'font-family:Georgia,serif;font-size:24px;color:#A8D5A2;margin-bottom:10px;';
+      title.style.cssText = 'font-family:Georgia,serif;font-size:24px;color:#A8D5A2;margin-bottom:10px;font-weight:400;';
       title.textContent = 'You are in.';
+
       var body = document.createElement('div');
       body.style.cssText = 'font-size:14px;color:#777;line-height:1.7;';
       body.textContent = 'Welcome to NextAtlas Weekly. First issue drops soon.';
-      msg.appendChild(title);
-      msg.appendChild(body);
+
       success.innerHTML = '';
-      success.appendChild(msg);
+      success.appendChild(title);
+      success.appendChild(body);
     }
-  }, 800);
+  }, 900);
 }
 </script>
 </body>
