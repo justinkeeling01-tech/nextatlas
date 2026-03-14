@@ -210,7 +210,7 @@ footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-i
       <input type="email" class="nl-in" placeholder="your@email.com" id="nl-email">
       <button class="nl-btn" onclick="sub()">Subscribe Free</button>
     </div>
-    <p class="nl-fine">Free forever &nbsp;&middot;&nbsp; No spam &nbsp;&middot;&nbsp; Unsubscribe anytime</p>
+    <p class="nl-fine">Free forever &nbsp;&middot;&nbsp; No spam &nbsp;&middot;&nbsp; Unsubscribe anytime &nbsp;&middot;&nbsp; Powered by Beehiiv</p>
   </div>
 </section>
 
@@ -680,7 +680,34 @@ drawGlobe();
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>50));
 function goto(id,btn){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth'});}
 
-function sub(){const e=document.getElementById('nl-email').value;if(!e||!e.includes('@'))return;document.getElementById('nl-email').value='';alert('Thanks for subscribing!');}
+async function sub(){
+  const emailEl=document.getElementById('nl-email');
+  const email=emailEl.value.trim();
+  if(!email||!email.includes('@')){emailEl.style.borderColor='#FF6B6B';return;}
+  const btn=document.querySelector('.nl-btn');
+  btn.textContent='Subscribing...';btn.disabled=true;
+  try{
+    // Beehiiv embed subscription via their public subscribe URL
+    const form=document.createElement('form');
+    form.method='POST';
+    form.action='https://nextatlas.beehiiv.com/subscribe';
+    form.target='_blank';
+    form.style.display='none';
+    const inp=document.createElement('input');
+    inp.name='email';inp.value=email;
+    form.appendChild(inp);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    emailEl.value='';
+    btn.textContent='Subscribed!';
+    btn.style.background='#5BC8C0';
+    setTimeout(()=>{btn.textContent='Subscribe Free';btn.style.background='';btn.disabled=false;},3000);
+  }catch(err){
+    btn.textContent='Subscribe Free';btn.disabled=false;
+    alert('Something went wrong. Please try again.');
+  }
+}
 </script>
 </body>
 </html>
