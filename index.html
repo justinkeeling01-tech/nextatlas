@@ -3,1028 +3,684 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NextAtlas — Private Market Intelligence for Fintech & AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<title>NextAtlas — Private Market Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #A8D5A2;
-    --green-bright: #C8F0C0;
-    --green-dim: rgba(168, 213, 162, 0.3);
-    --black: #000000;
-    --dark: #0a0a0a;
-    --card: #0d0d0d;
-    --border: rgba(168, 213, 162, 0.15);
-    --white: #ffffff;
-    --muted: #666666;
-    --serif: 'Cormorant Garamond', serif;
-    --sans: 'DM Sans', sans-serif;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--sans);
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* Custom cursor */
-  .cursor {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: var(--green);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.1s ease;
-    mix-blend-mode: difference;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 32px;
-    height: 32px;
-    border: 1px solid rgba(168, 213, 162, 0.5);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.15s ease;
-  }
-
-  /* Navbar */
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    padding: 24px 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.4s ease;
-  }
-  nav.scrolled {
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(20px);
-    padding: 16px 48px;
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-  }
-  .nav-logo svg {
-    width: 28px;
-    height: 28px;
-  }
-  .nav-logo-text {
-    font-family: var(--serif);
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    color: var(--green);
-  }
-  .nav-links {
-    display: flex;
-    gap: 40px;
-    list-style: none;
-  }
-  .nav-links a {
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    font-weight: 400;
-    transition: color 0.3s ease;
-    text-transform: uppercase;
-  }
-  .nav-links a:hover { color: var(--green); }
-
-  /* Hero */
-  #hero {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  #globe-canvas {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    padding: 0 24px;
-    max-width: 800px;
-  }
-  .hero-tag {
-    display: inline-block;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--green);
-    border: 1px solid var(--green-dim);
-    padding: 6px 16px;
-    border-radius: 100px;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.3s forwards;
-  }
-  .hero-headline {
-    font-family: var(--serif);
-    font-size: clamp(48px, 7vw, 88px);
-    font-weight: 300;
-    line-height: 1.05;
-    color: var(--green);
-    letter-spacing: -0.02em;
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.5s forwards;
-  }
-  .hero-headline em {
-    font-style: italic;
-    color: var(--green-bright);
-  }
-  .hero-sub {
-    font-size: 17px;
-    color: rgba(255,255,255,0.65);
-    font-weight: 300;
-    line-height: 1.6;
-    margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.7s forwards;
-  }
-  .hero-cta {
-    display: inline-block;
-    padding: 14px 36px;
-    border: 1px solid var(--green);
-    color: var(--white);
-    text-decoration: none;
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 400;
-    transition: all 0.3s ease;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.9s forwards;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-cta::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--green);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: -1;
-  }
-  .hero-cta:hover { color: var(--black); }
-  .hero-cta:hover::before { transform: translateX(0); }
-
-  /* Scroll indicator */
-  .scroll-indicator {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    animation: fadeUp 1s ease 1.2s forwards;
-  }
-  .scroll-indicator span {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, var(--green), transparent);
-    animation: scrollPulse 2s ease infinite;
-  }
-
-  /* Stats */
-  #stats {
-    padding: 80px 48px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .stats-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-  }
-  .stat {
-    text-align: center;
-    padding: 40px;
-    border-right: 1px solid var(--border);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s ease;
-  }
-  .stat:last-child { border-right: none; }
-  .stat.visible { opacity: 1; transform: translateY(0); }
-  .stat-number {
-    font-family: var(--serif);
-    font-size: clamp(48px, 5vw, 72px);
-    font-weight: 300;
-    color: var(--green);
-    line-height: 1;
-    margin-bottom: 12px;
-    letter-spacing: -0.02em;
-  }
-  .stat-label {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 400;
-  }
-
-  /* Featured Startups */
-  #startups {
-    padding: 120px 48px;
-  }
-  .section-header {
-    max-width: 1200px;
-    margin: 0 auto 64px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-  .section-title {
-    font-family: var(--serif);
-    font-size: clamp(36px, 4vw, 52px);
-    font-weight: 300;
-    color: var(--white);
-    letter-spacing: -0.02em;
-  }
-  .section-sub {
-    font-size: 14px;
-    color: var(--muted);
-    max-width: 320px;
-    text-align: right;
-    line-height: 1.6;
-  }
-  .cards-scroll {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
-    transition: all 0.4s ease;
-    opacity: 0;
-    transform: translateY(30px);
-    cursor: none;
-    position: relative;
-    overflow: hidden;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--green), transparent);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-  .card.visible { opacity: 1; transform: translateY(0); }
-  .card:hover {
-    border-color: var(--green);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(168, 213, 162, 0.08);
-  }
-  .card:hover::before { opacity: 1; }
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .card-name {
-    font-family: var(--serif);
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--white);
-    letter-spacing: -0.01em;
-  }
-  .tag {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 100px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .tag-ai {
-    background: rgba(168, 213, 162, 0.15);
-    color: var(--green);
-    border: 1px solid rgba(168, 213, 162, 0.3);
-  }
-  .tag-fintech {
-    background: transparent;
-    color: var(--green);
-    border: 1px solid rgba(168, 213, 162, 0.3);
-  }
-  .card-valuation {
-    font-family: var(--serif);
-    font-size: 32px;
-    font-weight: 300;
-    color: var(--green);
-    letter-spacing: -0.02em;
-    margin-bottom: 4px;
-  }
-  .card-stage {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-  .card-desc {
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
-    line-height: 1.6;
-    font-weight: 300;
-  }
-
-  /* Categories */
-  #categories {
-    padding: 120px 48px;
-    border-top: 1px solid var(--border);
-  }
-  .categories-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .categories-title {
-    font-family: var(--serif);
-    font-size: clamp(36px, 4vw, 52px);
-    font-weight: 300;
-    color: var(--white);
-    letter-spacing: -0.02em;
-    margin-bottom: 48px;
-    text-align: center;
-  }
-  .category-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  .category-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 56px 48px;
-    transition: all 0.4s ease;
-    cursor: none;
-    position: relative;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  .category-card.visible { opacity: 1; transform: translateY(0); }
-  .category-card:hover {
-    border-color: rgba(168, 213, 162, 0.5);
-    box-shadow: 0 30px 80px rgba(168, 213, 162, 0.06);
-    transform: perspective(1000px) rotateX(2deg) translateY(-4px);
-  }
-  .category-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 28px;
-    color: var(--green);
-  }
-  .category-name {
-    font-family: var(--serif);
-    font-size: 40px;
-    font-weight: 300;
-    color: var(--white);
-    margin-bottom: 16px;
-    letter-spacing: -0.02em;
-  }
-  .category-subs {
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-    line-height: 1.8;
-  }
-  .category-arrow {
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--green);
-    transition: all 0.3s ease;
-  }
-  .category-card:hover .category-arrow {
-    background: var(--green);
-    color: var(--black);
-    border-color: var(--green);
-  }
-
-  /* Newsletter */
-  #newsletter {
-    padding: 140px 48px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  #newsletter::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(168, 213, 162, 0.04) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .newsletter-inner {
-    max-width: 560px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-  .newsletter-label {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 24px;
-  }
-  .newsletter-title {
-    font-family: var(--serif);
-    font-size: clamp(40px, 5vw, 64px);
-    font-weight: 300;
-    color: var(--white);
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
-    line-height: 1.1;
-  }
-  .newsletter-sub {
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 48px;
-    font-weight: 300;
-  }
-  .newsletter-form {
-    display: flex;
-    gap: 0;
-    max-width: 480px;
-    margin: 0 auto;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: border-color 0.3s ease;
-  }
-  .newsletter-form:focus-within {
-    border-color: var(--green);
-  }
-  .newsletter-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    padding: 16px 20px;
-    color: var(--white);
-    font-family: var(--sans);
-    font-size: 14px;
-    outline: none;
-  }
-  .newsletter-input::placeholder { color: var(--muted); }
-  .newsletter-btn {
-    background: var(--green);
-    color: var(--black);
-    border: none;
-    padding: 16px 28px;
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    cursor: none;
-    transition: background 0.3s ease;
-    white-space: nowrap;
-  }
-  .newsletter-btn:hover { background: var(--green-bright); }
-
-  /* Footer */
-  footer {
-    padding: 48px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-  }
-  .footer-logo-text {
-    font-family: var(--serif);
-    font-size: 15px;
-    letter-spacing: 0.15em;
-    color: var(--green);
-  }
-  .footer-links {
-    display: flex;
-    gap: 32px;
-    list-style: none;
-  }
-  .footer-links a {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  .footer-links a:hover { color: var(--green); }
-  .footer-right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-  .footer-copy {
-    font-size: 12px;
-    color: var(--muted);
-  }
-  .social-links {
-    display: flex;
-    gap: 16px;
-  }
-  .social-links a {
-    color: var(--muted);
-    transition: color 0.3s ease;
-    text-decoration: none;
-  }
-  .social-links a:hover { color: var(--green); }
-
-  /* Animations */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* Stagger delays for cards */
-  .card:nth-child(1) { transition-delay: 0.05s; }
-  .card:nth-child(2) { transition-delay: 0.1s; }
-  .card:nth-child(3) { transition-delay: 0.15s; }
-  .card:nth-child(4) { transition-delay: 0.2s; }
-  .card:nth-child(5) { transition-delay: 0.25s; }
-  .card:nth-child(6) { transition-delay: 0.3s; }
-  .card:nth-child(7) { transition-delay: 0.35s; }
-  .card:nth-child(8) { transition-delay: 0.4s; }
-  .card:nth-child(9) { transition-delay: 0.45s; }
-  .card:nth-child(10) { transition-delay: 0.5s; }
-
-  .category-card:nth-child(2) { transition-delay: 0.15s; }
+:root{--g:#A8D5A2;--gb:#C8F0C0;--teal:#5BC8C0;--gold:#E8C84A;--coral:#FF6B6B;--black:#040404;--dark:#0a0a0a;--card:#0e0e0e;--border:rgba(255,255,255,0.06);--borderg:rgba(168,213,162,0.15);--white:#f8f8f8;--dim:#444;--mid:#777;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:22px 56px;transition:all .3s}
+nav.scrolled{background:rgba(4,4,4,.92);backdrop-filter:blur(24px);padding:14px 56px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}.logo svg{width:22px;height:22px}
+.logo-word{font-family:var(--serif);font-size:17px;letter-spacing:.18em;color:var(--g);font-weight:500}
+.nav-tabs{display:flex;gap:4px}
+.ntab{padding:7px 18px;border-radius:6px;font-size:12px;font-weight:500;letter-spacing:.04em;background:none;border:none;color:var(--mid);cursor:pointer;transition:all .2s;text-transform:uppercase}
+.ntab:hover{color:var(--white);background:rgba(255,255,255,.05)}.ntab.on{color:var(--g);background:rgba(168,213,162,.08)}
+.nav-r{display:flex;align-items:center;gap:16px}
+.nav-count{font-size:11px;color:var(--mid);letter-spacing:.06em}
+.nav-sub{padding:9px 20px;background:var(--g);color:#000;border:none;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:background .2s;text-decoration:none}
+.nav-sub:hover{background:var(--gb)}
+#hero{position:relative;height:100vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#globe-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 50%,rgba(168,213,162,.055) 0%,transparent 65%),radial-gradient(ellipse 35% 35% at 75% 25%,rgba(91,200,192,.04) 0%,transparent 60%);pointer-events:none}
+.hero-inner{position:relative;z-index:2;text-align:center;max-width:860px;padding:0 32px}
+.hero-kicker{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--borderg);border-radius:4px;padding:6px 16px;margin-bottom:40px;font-size:11px;font-weight:500;letter-spacing:.14em;color:var(--g);text-transform:uppercase;background:rgba(168,213,162,.04);opacity:0;animation:fu .7s ease .2s forwards}
+.kp{width:5px;height:5px;background:var(--g);border-radius:50%;animation:pulse 2.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-h{font-family:var(--serif);font-size:clamp(48px,6.5vw,86px);font-weight:400;line-height:1.04;letter-spacing:-.025em;margin-bottom:26px;opacity:0;animation:fu .7s ease .4s forwards}
+.hero-h .w1{color:var(--white)}.hero-h .w2{color:var(--g);font-style:italic}
+.hero-p{font-size:17px;font-weight:300;color:var(--mid);line-height:1.7;margin-bottom:48px;opacity:0;animation:fu .7s ease .6s forwards}
+.hero-p b{color:rgba(248,248,248,.85);font-weight:500}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fu .7s ease .8s forwards}
+.btn-a{padding:14px 30px;background:var(--g);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:.03em;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-a:hover{background:var(--gb);transform:translateY(-2px)}
+.btn-b{padding:14px 30px;background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:13px;font-weight:400;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-b:hover{border-color:rgba(255,255,255,.22)}
+.stats-bar{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);max-width:760px;margin:64px auto 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.02);opacity:0;animation:fu .7s ease 1s forwards}
+.sbar{padding:22px 24px;text-align:center;border-right:1px solid var(--border)}
+.sbar:last-child{border-right:none}
+.sbar-n{font-family:var(--serif);font-size:30px;font-weight:400;color:var(--g);display:block;line-height:1;margin-bottom:6px}
+.sbar-l{font-size:10px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
+.wrap{max-width:1280px;margin:0 auto;padding:0 56px}.sec{padding:88px 0}
+.sec-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px}
+.sec-eyebrow{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--g);display:block;margin-bottom:10px}
+.sec-t{font-family:var(--serif);font-size:clamp(26px,3vw,38px);font-weight:400;color:var(--white);letter-spacing:-.02em}
+.sec-more{font-size:12px;color:var(--mid);text-decoration:none;letter-spacing:.04em;transition:color .2s}.sec-more:hover{color:var(--g)}
+.rule{height:1px;background:var(--border);width:100%}
+.picks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pick{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.pick::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;opacity:0;transition:opacity .25s}
+.pick.p-hot::after{background:linear-gradient(90deg,rgba(255,107,107,0),#FF6B6B,rgba(255,107,107,0))}
+.pick.p-rise::after{background:linear-gradient(90deg,rgba(91,200,192,0),#5BC8C0,rgba(91,200,192,0))}
+.pick.p-watch::after{background:linear-gradient(90deg,rgba(232,200,74,0),#E8C84A,rgba(232,200,74,0))}
+.pick:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.1)}.pick:hover::after{opacity:1}
+.pick-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 0;margin-bottom:18px;display:block}
+.pick.p-hot .pick-label{color:#FF6B6B}.pick.p-rise .pick-label{color:var(--teal)}.pick.p-watch .pick-label{color:var(--gold)}
+.pick-name{font-family:var(--serif);font-size:24px;font-weight:500;color:var(--white);margin-bottom:8px}
+.pick-why{font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:20px}
+.pick-foot{display:flex;align-items:center;gap:10px}
+.pick-val{font-family:var(--serif);font-size:20px;color:var(--g)}.pick-sep{color:var(--dim);font-size:10px}.pick-cat{font-size:11px;color:var(--mid);letter-spacing:.06em}
+.pick-arr{position:absolute;bottom:22px;right:22px;font-size:18px;color:var(--dim);transition:all .2s}.pick:hover .pick-arr{color:var(--g);transform:translate(2px,-2px)}
+.filter-row{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.fb{padding:7px 18px;border-radius:6px;border:1px solid var(--border);font-size:12px;font-weight:500;letter-spacing:.03em;color:var(--mid);background:none;cursor:pointer;transition:all .2s}
+.fb:hover{color:var(--white);border-color:rgba(255,255,255,.15)}.fb.on{color:#000;background:var(--g);border-color:var(--g)}
+.db-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.dcard{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:22px;cursor:pointer;transition:all .22s;position:relative;opacity:0;transform:translateY(14px)}
+.dcard.vis{opacity:1;transform:translateY(0)}.dcard:hover{border-color:var(--borderg);transform:translateY(-2px)}
+.dcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.dcard-name{font-size:15px;font-weight:500;color:var(--white);letter-spacing:-.01em}
+.dtag{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px}
+.dtag.fin{color:var(--teal);background:rgba(91,200,192,.1);border:1px solid rgba(91,200,192,.15)}
+.dtag.ai{color:var(--gold);background:rgba(232,200,74,.1);border:1px solid rgba(232,200,74,.15)}
+.dcard-val{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--g);margin-bottom:3px}
+.dcard-stage{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.dcard-desc{font-size:12px;color:var(--mid);line-height:1.6;font-weight:300}
+.dcard-arr{position:absolute;bottom:16px;right:16px;font-size:14px;color:var(--dim);transition:all .2s}.dcard:hover .dcard-arr{color:var(--g)}
+.load-more{display:block;margin:32px auto 0;padding:12px 32px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--mid);font-size:13px;cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.load-more:hover{border-color:var(--g);color:var(--g)}
+#nl-sec{background:linear-gradient(135deg,rgba(168,213,162,.05) 0%,rgba(91,200,192,.03) 60%,rgba(232,200,74,.02) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.nl-wrap{max-width:600px;margin:0 auto;text-align:center;padding:88px 32px}
+.nl-social{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:100px;padding:8px 18px 8px 10px;margin-bottom:28px;background:rgba(255,255,255,.03)}
+.nl-faces{display:flex}
+.nl-face{width:28px;height:28px;border-radius:50%;border:2px solid var(--black);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:-6px}
+.nl-face:first-child{margin-left:0}.f1{background:#A8D5A2;color:#000}.f2{background:#5BC8C0;color:#000}.f3{background:#E8C84A;color:#000}.f4{background:#FF6B6B;color:#fff}
+.nl-social-text{font-size:13px;color:var(--mid)}.nl-social-text strong{color:var(--white);font-weight:500}
+.nl-h{font-family:var(--serif);font-size:clamp(34px,5vw,54px);font-weight:400;color:var(--white);line-height:1.1;margin-bottom:16px}
+.nl-h em{color:var(--g);font-style:italic}
+.nl-p{font-size:15px;color:var(--mid);line-height:1.75;margin-bottom:36px;font-weight:300}
+.nl-form{display:flex;max-width:420px;margin:0 auto 14px}
+.nl-in{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-right:none;border-radius:8px 0 0 8px;padding:14px 18px;color:var(--white);font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s}
+.nl-in:focus{border-color:var(--borderg)}.nl-in::placeholder{color:var(--dim)}
+.nl-btn{background:var(--g);color:#000;border:none;border-radius:0 8px 8px 0;padding:14px 22px;font-size:12px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:background .2s;white-space:nowrap;text-transform:uppercase}
+.nl-btn:hover{background:var(--gb)}.nl-fine{font-size:11px;color:var(--dim)}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.catcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:44px 40px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden}
+.catcard:hover{border-color:rgba(255,255,255,.1);transform:translateY(-3px)}
+.catcard-count{position:absolute;top:22px;right:22px;font-size:11px;color:var(--dim);letter-spacing:.08em;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:100px;padding:3px 12px}
+.catcard-n{font-family:var(--serif);font-size:34px;font-weight:400;color:var(--white);margin-bottom:12px}
+.catcard-subs{font-size:13px;color:var(--mid);line-height:1.9;letter-spacing:.02em}
+.catcard-arr{position:absolute;bottom:28px;right:28px;width:32px;height:32px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--mid);transition:all .2s;font-size:16px}
+.catcard:hover .catcard-arr{background:var(--g);color:#000;border-color:var(--g)}
+footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.fl{display:flex;align-items:center;gap:10px;text-decoration:none}
+.fl-t{font-family:var(--serif);font-size:15px;color:var(--g);letter-spacing:.15em}
+.flinks{display:flex;gap:28px;list-style:none}
+.flinks a{font-size:11px;color:var(--dim);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:color .2s}
+.flinks a:hover{color:var(--g)}.fcopy{font-size:11px;color:var(--dim)}
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .2s;backdrop-filter:blur(12px)}
+.moverlay.on{opacity:1;visibility:visible}
+.modal{background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:16px;width:100%;max-width:660px;max-height:90vh;overflow-y:auto;transform:scale(.96) translateY(12px);transition:transform .2s}
+.moverlay.on .modal{transform:scale(1) translateY(0)}
+.mhd{padding:36px 36px 26px;border-bottom:1px solid var(--border)}
+.mhd-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.mname{font-family:var(--serif);font-size:36px;font-weight:400;color:var(--white);letter-spacing:-.02em}
+.mx{width:32px;height:32px;border:1px solid var(--border);border-radius:50%;background:none;color:var(--mid);cursor:pointer;font-size:14px;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mx:hover{border-color:var(--g);color:var(--g)}
+.mtags{display:flex;gap:8px;flex-wrap:wrap}
+.mbody{padding:30px 36px 36px}
+.mdesc{font-size:15px;color:rgba(248,248,248,.6);line-height:1.8;margin-bottom:30px;font-weight:300}
+.mfacts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px}
+.mf label{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:6px}
+.mf span{font-size:14px;color:var(--white);font-weight:300}
+.mf span.big{font-family:var(--serif);font-size:24px;color:var(--g);font-weight:400}
+.mhr{height:1px;background:var(--border);margin:22px 0}
+.minv-label{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:12px}
+.mpills{display:flex;flex-wrap:wrap;gap:8px}
+.mpill{background:rgba(255,255,255,.03);border:1px solid var(--border);color:rgba(248,248,248,.5);font-size:12px;padding:4px 12px;border-radius:4px}
+.mweb{display:inline-flex;align-items:center;gap:8px;margin-top:24px;padding:11px 20px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--g);font-size:13px;font-weight:500;transition:all .2s}
+.mweb:hover{border-color:var(--g);background:rgba(168,213,162,.05)}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){nav{padding:14px 20px}nav.scrolled{padding:10px 20px}.wrap{padding:0 20px}.sec{padding:60px 0}.nav-tabs{display:none}.picks-grid,.cat-grid{grid-template-columns:1fr}.mfacts{grid-template-columns:1fr}.mhd,.mbody{padding:24px}.stats-bar{grid-template-columns:1fr 1fr}footer{flex-direction:column;gap:18px;padding:32px 20px;text-align:center}}
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<!-- Navbar -->
-<nav id="navbar">
-  <a href="#" class="nav-logo">
-    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="14" cy="14" r="13" stroke="#A8D5A2" stroke-width="0.8"/>
-      <ellipse cx="14" cy="14" rx="6" ry="13" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="1" y1="14" x2="27" y2="14" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="2.5" y1="8" x2="25.5" y2="8" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="2.5" y1="20" x2="25.5" y2="20" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="14" y1="1" x2="14" y2="27" stroke="#A8D5A2" stroke-width="0.8"/>
-    </svg>
-    <span class="nav-logo-text">NEXTATLAS</span>
+<nav id="nav">
+  <a href="#" class="logo">
+    <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#A8D5A2" stroke-width=".75"/><ellipse cx="14" cy="14" rx="5.5" ry="13" stroke="#A8D5A2" stroke-width=".75"/><line x1="1" y1="14" x2="27" y2="14" stroke="#A8D5A2" stroke-width=".75"/><line x1="3" y1="8.5" x2="25" y2="8.5" stroke="#A8D5A2" stroke-width=".75"/><line x1="3" y1="19.5" x2="25" y2="19.5" stroke="#A8D5A2" stroke-width=".75"/></svg>
+    <span class="logo-word">NEXTATLAS</span>
   </a>
-  <ul class="nav-links">
-    <li><a href="#startups">Startups</a></li>
-    <li><a href="#categories">Funding Tracker</a></li>
-    <li><a href="#categories">Insights</a></li>
-    <li><a href="#newsletter">Newsletter</a></li>
-  </ul>
+  <div class="nav-tabs">
+    <button class="ntab on" onclick="goto('picks',this)">Top Picks</button>
+    <button class="ntab" onclick="goto('database',this)">Database</button>
+    <button class="ntab" onclick="goto('categories',this)">Categories</button>
+    <button class="ntab" onclick="goto('nl-sec',this)">Newsletter</button>
+  </div>
+  <div class="nav-r">
+    <span class="nav-count" id="nav-count">100+ companies tracked</span>
+    <a href="#nl-sec" class="nav-sub">Subscribe Free</a>
+  </div>
 </nav>
 
-<!-- Hero -->
 <section id="hero">
   <canvas id="globe-canvas"></canvas>
-  <div class="hero-content">
-    <div class="hero-tag">Private Market Intelligence</div>
-    <h1 class="hero-headline">Private market intelligence<br>for <em>Fintech & AI.</em></h1>
-    <p class="hero-sub">Track the startups reshaping finance before they go public.</p>
-    <a href="#startups" class="hero-cta">Explore the Database</a>
-  </div>
-  <div class="scroll-indicator">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
-</section>
-
-<!-- Stats -->
-<section id="stats">
-  <div class="stats-inner">
-    <div class="stat">
-      <div class="stat-number" data-target="104">0</div>
-      <div class="stat-label">Companies Tracked</div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker"><span class="kp"></span>Updated Weekly &middot; 100+ Companies Tracked</div>
+    <h1 class="hero-h"><span class="w1">Private market intelligence</span><br><span class="w2">for Fintech &amp; AI.</span></h1>
+    <p class="hero-p">Track the startups reshaping finance and technology <b>before they go public.</b><br>Curated data, funding intelligence, and investor insight &mdash; all in one place.</p>
+    <div class="hero-btns">
+      <a href="#picks" class="btn-a">See This Week's Picks</a>
+      <a href="#database" class="btn-b">Browse the Database</a>
     </div>
-    <div class="stat">
-      <div class="stat-number" data-prefix="$" data-suffix="T+" data-target="2">0</div>
-      <div class="stat-label">Total Funding Tracked</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number" data-target="2">0</div>
-      <div class="stat-label">Verticals</div>
+    <div class="stats-bar">
+      <div class="sbar"><span class="sbar-n" id="sc1">100+</span><span class="sbar-l">Companies</span></div>
+      <div class="sbar"><span class="sbar-n">$2T+</span><span class="sbar-l">Total Funding</span></div>
+      <div class="sbar"><span class="sbar-n">2</span><span class="sbar-l">Verticals</span></div>
+      <div class="sbar"><span class="sbar-n">30</span><span class="sbar-l">Investors Tracked</span></div>
     </div>
   </div>
 </section>
 
-<!-- Featured Startups -->
-<section id="startups">
-  <div class="section-header">
-    <h2 class="section-title">Featured Startups</h2>
-    <p class="section-sub">The most valuable private companies reshaping finance and AI</p>
+<div id="picks"><div class="rule"></div>
+<div class="wrap"><div class="sec">
+  <div class="sec-hd">
+    <div><span class="sec-eyebrow">Editor's Picks</span><h2 class="sec-t">Top Picks This Week</h2></div>
+    <a href="#database" class="sec-more" onclick="document.getElementById('database').scrollIntoView({behavior:'smooth'});return false">View all companies &rarr;</a>
   </div>
-  <div class="cards-scroll">
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Stripe</div>
-        <span class="tag tag-fintech">Fintech</span>
-      </div>
-      <div class="card-valuation">$159B</div>
-      <div class="card-stage">Growth Stage</div>
-      <div class="card-desc">Payment infrastructure for the internet. Powers millions of businesses worldwide.</div>
+  <div class="picks-grid" id="picks-grid"></div>
+</div></div></div>
+
+<div id="database"><div class="rule"></div>
+<div class="wrap"><div class="sec">
+  <div class="sec-hd">
+    <div><span class="sec-eyebrow">Full Database</span><h2 class="sec-t" id="db-title">100+ Companies</h2></div>
+  </div>
+  <div class="filter-row">
+    <button class="fb on" onclick="filt('all',this)">All</button>
+    <button class="fb" onclick="filt('Fintech',this)">Fintech</button>
+    <button class="fb" onclick="filt('AI Infrastructure',this)">AI Infrastructure</button>
+    <button class="fb" onclick="filt('Payments',this)">Payments</button>
+    <button class="fb" onclick="filt('Lending',this)">Lending</button>
+    <button class="fb" onclick="filt('Banking Infrastructure',this)">Banking Infra</button>
+    <button class="fb" onclick="filt('Wealthtech',this)">Wealthtech</button>
+  </div>
+  <div class="db-grid" id="db-grid"></div>
+  <button class="load-more" id="lmbtn" style="display:none" onclick="loadMore()">Load more</button>
+</div></div></div>
+
+<section id="nl-sec">
+  <div class="nl-wrap">
+    <div class="nl-social">
+      <div class="nl-faces"><div class="nl-face f1">JK</div><div class="nl-face f2">SA</div><div class="nl-face f3">MR</div><div class="nl-face f4">+</div></div>
+      <span class="nl-social-text">Join <strong>2,400+ founders, VCs &amp; analysts</strong></span>
     </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Anthropic</div>
-        <span class="tag tag-ai">AI Infrastructure</span>
-      </div>
-      <div class="card-valuation">$61.5B</div>
-      <div class="card-stage">Series C</div>
-      <div class="card-desc">AI safety company building Claude. Backed by Google and Amazon.</div>
+    <h2 class="nl-h">The smartest <em>Fintech &amp; AI</em><br>newsletter out there.</h2>
+    <p class="nl-p">Every week: the most important funding rounds, emerging startups, and market shifts &mdash; curated so you don't have to dig. No noise. Just signal.</p>
+    <div class="nl-form">
+      <input type="email" class="nl-in" placeholder="your@email.com" id="nl-email">
+      <button class="nl-btn" onclick="sub()">Subscribe Free</button>
     </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">OpenAI</div>
-        <span class="tag tag-ai">AI Infrastructure</span>
-      </div>
-      <div class="card-valuation">$300B</div>
-      <div class="card-stage">Growth Stage</div>
-      <div class="card-desc">Creator of ChatGPT and GPT-4. The world's most valuable private AI company.</div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Revolut</div>
-        <span class="tag tag-fintech">Fintech</span>
-      </div>
-      <div class="card-valuation">$45B</div>
-      <div class="card-stage">Growth Stage</div>
-      <div class="card-desc">Global financial superapp for banking, crypto, and currency exchange.</div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Databricks</div>
-        <span class="tag tag-ai">AI Infrastructure</span>
-      </div>
-      <div class="card-valuation">$62B</div>
-      <div class="card-stage">Growth Stage</div>
-      <div class="card-desc">The Data and AI company powering the lakehouse architecture for 10,000+ customers.</div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Ramp</div>
-        <span class="tag tag-fintech">Fintech</span>
-      </div>
-      <div class="card-valuation">$32B</div>
-      <div class="card-stage">Series D</div>
-      <div class="card-desc">Corporate spend management platform helping businesses save money automatically.</div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Mercury</div>
-        <span class="tag tag-fintech">Fintech</span>
-      </div>
-      <div class="card-valuation">$3.5B</div>
-      <div class="card-stage">Series C</div>
-      <div class="card-desc">Banking platform built for startups. Applied for national bank charter in 2025.</div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Klarna</div>
-        <span class="tag tag-fintech">Fintech</span>
-      </div>
-      <div class="card-valuation">$14.6B</div>
-      <div class="card-stage">Growth Stage</div>
-      <div class="card-desc">Buy now pay later and shopping platform. Europe's most valuable fintech pursuing US IPO.</div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">CoreWeave</div>
-        <span class="tag tag-ai">AI Infrastructure</span>
-      </div>
-      <div class="card-valuation">$23B</div>
-      <div class="card-stage">Growth Stage</div>
-      <div class="card-desc">Specialized GPU cloud provider for AI training and inference at scale.</div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="card-name">Cursor</div>
-        <span class="tag tag-ai">AI Infrastructure</span>
-      </div>
-      <div class="card-valuation">$2.6B</div>
-      <div class="card-stage">Series B</div>
-      <div class="card-desc">The fastest-growing AI code editor. Reached $100M ARR in 2024.</div>
-    </div>
+    <p class="nl-fine">Free forever &nbsp;&middot;&nbsp; No spam &nbsp;&middot;&nbsp; Unsubscribe anytime</p>
   </div>
 </section>
 
-<!-- Categories -->
-<section id="categories">
-  <div class="categories-inner">
-    <h2 class="categories-title">Explore by Category</h2>
-    <div class="category-grid">
-      <div class="category-card">
-        <svg class="category-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="4" y="18" width="40" height="26" rx="2"/>
-          <path d="M4 24h40M15 18V10a9 9 0 0118 0v8"/>
-          <circle cx="24" cy="31" r="3"/>
-          <line x1="24" y1="34" x2="24" y2="38"/>
-        </svg>
-        <div class="category-name">Fintech</div>
-        <div class="category-subs">Payments · Lending<br>Banking Infrastructure · Wealthtech</div>
-        <div class="category-arrow">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 7h10M7 2l5 5-5 5"/>
-          </svg>
-        </div>
-      </div>
-      <div class="category-card">
-        <svg class="category-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="8" y="8" width="32" height="32" rx="4"/>
-          <rect x="16" y="16" width="16" height="16" rx="2"/>
-          <line x1="24" y1="4" x2="24" y2="8"/>
-          <line x1="24" y1="40" x2="24" y2="44"/>
-          <line x1="4" y1="24" x2="8" y2="24"/>
-          <line x1="40" y1="24" x2="44" y2="24"/>
-          <circle cx="24" cy="24" r="3"/>
-        </svg>
-        <div class="category-name">AI Infrastructure</div>
-        <div class="category-subs">Model Tooling · Compute<br>Developer Tools · Data Infrastructure</div>
-        <div class="category-arrow">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 7h10M7 2l5 5-5 5"/>
-          </svg>
-        </div>
-      </div>
+<div id="categories"><div class="rule"></div>
+<div class="wrap"><div class="sec">
+  <div class="sec-hd"><div><span class="sec-eyebrow">Browse</span><h2 class="sec-t">Explore by Category</h2></div></div>
+  <div class="cat-grid">
+    <div class="catcard" onclick="filt('Fintech',null);document.getElementById('database').scrollIntoView({behavior:'smooth'})">
+      <span class="catcard-count" id="ft-count">— companies</span>
+      <div class="catcard-n">Fintech</div>
+      <div class="catcard-subs">Payments &nbsp;&middot;&nbsp; Lending &nbsp;&middot;&nbsp; Banking Infrastructure<br>Wealthtech &nbsp;&middot;&nbsp; Compliance &nbsp;&middot;&nbsp; InsurTech</div>
+      <div class="catcard-arr">&rarr;</div>
+    </div>
+    <div class="catcard" onclick="filt('AI Infrastructure',null);document.getElementById('database').scrollIntoView({behavior:'smooth'})">
+      <span class="catcard-count" id="ai-count">— companies</span>
+      <div class="catcard-n">AI Infrastructure</div>
+      <div class="catcard-subs">Model Tooling &nbsp;&middot;&nbsp; Compute &nbsp;&middot;&nbsp; Developer Tools<br>Data Infrastructure &nbsp;&middot;&nbsp; Vector Databases</div>
+      <div class="catcard-arr">&rarr;</div>
     </div>
   </div>
-</section>
+</div></div></div>
 
-<!-- Newsletter -->
-<section id="newsletter">
-  <div class="newsletter-inner">
-    <div class="newsletter-label">Weekly Intelligence</div>
-    <h2 class="newsletter-title">Join the<br>Newsletter.</h2>
-    <p class="newsletter-sub">Weekly intelligence on the startups reshaping finance and AI. No noise — just signal.</p>
-    <div class="newsletter-form">
-      <input type="email" class="newsletter-input" placeholder="Enter your email">
-      <button class="newsletter-btn">Subscribe Free</button>
-    </div>
-  </div>
-</section>
-
-<!-- Footer -->
 <footer>
-  <a href="#" class="footer-logo">
-    <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-      <circle cx="14" cy="14" r="13" stroke="#A8D5A2" stroke-width="0.8"/>
-      <ellipse cx="14" cy="14" rx="6" ry="13" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="1" y1="14" x2="27" y2="14" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="2.5" y1="8" x2="25.5" y2="8" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="2.5" y1="20" x2="25.5" y2="20" stroke="#A8D5A2" stroke-width="0.8"/>
-      <line x1="14" y1="1" x2="14" y2="27" stroke="#A8D5A2" stroke-width="0.8"/>
-    </svg>
-    <span class="footer-logo-text">NEXTATLAS</span>
+  <a href="#" class="fl">
+    <svg width="20" height="20" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#A8D5A2" stroke-width=".75"/><ellipse cx="14" cy="14" rx="5.5" ry="13" stroke="#A8D5A2" stroke-width=".75"/><line x1="1" y1="14" x2="27" y2="14" stroke="#A8D5A2" stroke-width=".75"/><line x1="3" y1="8.5" x2="25" y2="8.5" stroke="#A8D5A2" stroke-width=".75"/><line x1="3" y1="19.5" x2="25" y2="19.5" stroke="#A8D5A2" stroke-width=".75"/></svg>
+    <span class="fl-t">NEXTATLAS</span>
   </a>
-  <ul class="footer-links">
-    <li><a href="#">Startups</a></li>
-    <li><a href="#">Funding Tracker</a></li>
-    <li><a href="#">Insights</a></li>
-    <li><a href="#">Newsletter</a></li>
-  </ul>
-  <div class="footer-right">
-    <div class="social-links">
-      <a href="#">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-      </a>
-      <a href="#">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-      </a>
-    </div>
-    <span class="footer-copy">© 2026 NextAtlas. All rights reserved.</span>
-  </div>
+  <ul class="flinks"><li><a href="#picks">Top Picks</a></li><li><a href="#database">Database</a></li><li><a href="#categories">Categories</a></li><li><a href="#nl-sec">Newsletter</a></li></ul>
+  <span class="fcopy">&copy; 2026 NextAtlas. All rights reserved.</span>
 </footer>
 
+<div class="moverlay" id="mov" onclick="cmbg(event)">
+  <div class="modal">
+    <div class="mhd">
+      <div class="mhd-top"><div class="mname" id="mn"></div><button class="mx" onclick="cm()">&#x2715;</button></div>
+      <div class="mtags" id="mtags"></div>
+    </div>
+    <div class="mbody">
+      <p class="mdesc" id="mdesc"></p>
+      <div class="mfacts">
+        <div class="mf"><label>Valuation</label><span class="big" id="mval"></span></div>
+        <div class="mf"><label>Stage</label><span id="mstage"></span></div>
+        <div class="mf"><label>Founded</label><span id="mfounded"></span></div>
+        <div class="mf"><label>Headquarters</label><span id="mhq"></span></div>
+        <div class="mf"><label>Founders</label><span id="mfounder"></span></div>
+        <div class="mf"><label>Lead Investor</label><span id="mlead"></span></div>
+      </div>
+      <div class="mhr"></div>
+      <span class="minv-label">Notable Investors</span>
+      <div class="mpills" id="mpills"></div>
+      <a href="#" class="mweb" id="mweb" target="_blank">Visit Website</a>
+    </div>
+  </div>
+</div>
+
 <script>
-// Custom cursor
-const cursor = document.getElementById('cursor');
-const cursorRing = document.getElementById('cursorRing');
-let mouseX = 0, mouseY = 0;
-let ringX = 0, ringY = 0;
+const DATA = [
+  {name:'Stripe',industry:'Fintech',sub:'Payments',val:'$159.0B',stage:'Growth',desc:'Stripe provides comprehensive financial infrastructure for internet businesses, offering payments processing, subscription billing, fraud detection, lending, and treasury services via developer-friendly APIs. Processed $1.4T in 2024.',founders:'Patrick Collison, John Collison',founded:'2010',hq:'San Francisco, CA',website:'stripe.com',lead:'Sequoia Capital',others:'a16z, General Catalyst, Thrive Capital',featured:true},
+  {name:'OpenAI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$300.0B',stage:'Growth',desc:'Creator of ChatGPT, GPT-4o, and the o1 reasoning model. The world\'s most valuable private company. Reached 300M weekly users in 2025. Raised $40B in early 2026 — the largest private funding round in history.',founders:'Sam Altman, Greg Brockman, Ilya Sutskever',founded:'2015',hq:'San Francisco, CA',website:'openai.com',lead:'Microsoft',others:'Khosla Ventures, Tiger Global, SoftBank',featured:true},
+  {name:'Databricks',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$62.0B',stage:'Growth',desc:'The Data and AI Company powering the lakehouse architecture, combining data engineering, ML, and analytics in a unified platform. Processes exabytes of data daily for 10,000+ customers. Raised $15.3B total funding.',founders:'Ali Ghodsi, Matei Zaharia',founded:'2013',hq:'San Francisco, CA',website:'databricks.com',lead:'Andreessen Horowitz',others:'Tiger Global, T. Rowe Price',featured:true},
+  {name:'Anthropic',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$61.5B',stage:'Series C',desc:'Anthropic is an AI safety company that builds reliable, interpretable, and steerable AI systems. Creator of the Claude family of models. Backed by Google and Amazon with $18B total funding.',founders:'Dario Amodei, Daniela Amodei',founded:'2021',hq:'San Francisco, CA',website:'anthropic.com',lead:'Iconiq',others:'Google, Amazon, Lightspeed, Salesforce Ventures, Menlo Ventures',featured:true},
+  {name:'Revolut',industry:'Fintech',sub:'Payments',val:'$75.0B',stage:'Growth',desc:'Global financial superapp offering banking, currency exchange, stock trading, crypto, and insurance to 50M+ customers in 38 countries. One of Europe\'s most valuable private fintechs.',founders:'Nikolay Storonsky, Vlad Yatsenko',founded:'2015',hq:'London, UK',website:'revolut.com',lead:'DST Global',others:'Index Ventures, Ribbit Capital, Balderton Capital',featured:true},
+  {name:'Adyen',industry:'Fintech',sub:'Payments',val:'$50.0B',stage:'Growth',desc:'Global payments platform processing for Spotify, Uber, and McDonald\'s. Single unified platform for in-store, online, and mobile payments across 200+ payment methods. Listed on Euronext Amsterdam.',founders:'Pieter van der Does, Arnout Schuijff',founded:'2006',hq:'Amsterdam, Netherlands',website:'adyen.com',lead:'General Atlantic',others:'Temasek, Index Ventures',featured:true},
+  {name:'CoreWeave',industry:'AI Infrastructure',sub:'AI Compute',val:'$23.0B',stage:'Growth',desc:'Specialized GPU cloud provider offering NVIDIA compute at scale for AI training and inference. Built for the AI boom. Filed for IPO in 2025 at a $35B+ valuation.',founders:'Michael Intrator, Brian Venturo, Brandon West',founded:'2017',hq:'Livingston, NJ',website:'coreweave.com',lead:'Magnetar Capital',others:'Blackstone, Coatue',featured:true},
+  {name:'Ramp',industry:'Fintech',sub:'Banking Infrastructure',val:'$32.0B',stage:'Series D+',desc:'Corporate spend management platform combining corporate cards, expense automation, AP automation, and financial analytics. Processes $55B+ in annualized payment volume.',founders:'Eric Glyman, Karim Atiyeh',founded:'2019',hq:'New York, NY',website:'ramp.com',lead:'Khosla Ventures',others:'Founders Fund, Thrive Capital, Sands Capital',featured:true},
+  {name:'Rippling',industry:'Fintech',sub:'Banking Infrastructure',val:'$13.5B',stage:'Series D+',desc:'All-in-one workforce platform combining HR, IT, and Finance. Manages payroll, benefits, devices, and spend management for 10,000+ companies. Raised $200M Series F at a $13.5B valuation in 2024.',founders:'Parker Conrad, Prasanna Sankar',founded:'2016',hq:'San Francisco, CA',website:'rippling.com',lead:'Kleiner Perkins',others:'Founders Fund, Greenoaks, Bedrock',featured:true},
+  {name:'Scale AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$13.8B',stage:'Growth',desc:'The leading data infrastructure company for AI, providing human-labeled training data, RLHF services, and evaluation tools to top AI labs including the US government. Raised $1B Series F.',founders:'Alexandr Wang',founded:'2016',hq:'San Francisco, CA',website:'scale.com',lead:'Founders Fund',others:'Tiger Global, Accel',featured:true},
+  {name:'Kalshi',industry:'Fintech',sub:'Payments',val:'$11.0B',stage:'Growth',desc:'World\'s largest CFTC-regulated prediction market. Users trade on real-world events from elections to Fed rate decisions. $1B+ weekly volume, up 1,000% from 2024. Raised $1B Series E in December 2025.',founders:'Tarek Mansour, Luana Lopes Lara',founded:'2019',hq:'New York, NY',website:'kalshi.com',lead:'Paradigm',others:'Sequoia Capital, Andreessen Horowitz, IVP, Y Combinator',featured:true},
+  {name:'Klarna',industry:'Fintech',sub:'Payments',val:'$14.6B',stage:'Growth',desc:'Swedish buy-now-pay-later and shopping platform serving 150M+ consumers. One of Europe\'s most valuable fintechs, currently pursuing a US IPO.',founders:'Sebastian Siemiatkowski, Niklas Adalberth, Victor Jacobsson',founded:'2005',hq:'Stockholm, Sweden',website:'klarna.com',lead:'Sequoia Capital',others:'SoftBank, Silver Lake, Ant Group',featured:true},
+  {name:'Wise',industry:'Fintech',sub:'Payments',val:'$10.0B',stage:'Growth',desc:'Global money transfer platform offering real exchange rates for 50+ currencies. Serves 16M+ customers and moves £10B+ monthly. Went public on the London Stock Exchange in 2021.',founders:'Taavet Hinrikus, Kristo Kaarmann',founded:'2011',hq:'London, UK',website:'wise.com',lead:'Andreessen Horowitz',others:'Baillie Gifford, IVP',featured:true},
+  {name:'Harvey AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$3.0B',stage:'Series D+',desc:'The defining legal AI company. Harvey automates contract review, due diligence, and legal research for the world\'s top law firms including Allen & Overy and PwC Legal. Raised $300M in 2025.',founders:'Winston Weinberg, Gabriel Pereyra',founded:'2022',hq:'San Francisco, CA',website:'harvey.ai',lead:'Sequoia Capital',others:'OpenAI Startup Fund, Kleiner Perkins',featured:true},
+  {name:'Groq',industry:'AI Infrastructure',sub:'AI Compute',val:'$2.8B',stage:'Series D+',desc:'Builds custom LPU chips for ultra-fast AI inference — 10-25x faster than GPU-based systems. GroqCloud API serves developers needing low-latency LLM responses. Raised $640M in 2024.',founders:'Jonathan Ross',founded:'2016',hq:'Mountain View, CA',website:'groq.com',lead:'BlackRock',others:'Samsung Catalyst Fund, Tiger Global',featured:true},
+  {name:'Cursor',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$2.6B',stage:'Series C',desc:'Fastest-growing AI code editor built on VS Code. Reached $100M ARR in 2024 — faster than any developer tool in history. Raised $105M Series B from Thrive Capital.',founders:'Michael Truell, Sualeh Asif, Arvid Lunnemark',founded:'2022',hq:'San Francisco, CA',website:'cursor.com',lead:'Thrive Capital',others:'Andreessen Horowitz, Accel, DST Global',featured:true},
+  {name:'Perplexity AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$9.0B',stage:'Growth',desc:'AI-powered answer engine delivering real-time, cited responses. Growing rapidly as a Google alternative with 15M+ daily active users. Raised $500M at a $9B valuation in 2024.',founders:'Aravind Srinivas, Denis Yarats, Johnny Ho',founded:'2022',hq:'San Francisco, CA',website:'perplexity.ai',lead:'IVP',others:'NEA, Sequoia Capital, Nvidia, Jeff Bezos',featured:true},
+  {name:'Bilt Rewards',industry:'Fintech',sub:'Payments',val:'$3.5B',stage:'Growth',desc:'First platform allowing renters to earn points on rent payments through 4M+ rental units. Its Mastercard earns points on dining and travel redeemable with airlines and hotels. Raised $150M at $3.1B in 2024.',founders:'Ankur Jain',founded:'2021',hq:'New York, NY',website:'biltrewards.com',lead:'Wells Fargo',others:'Blackstone, Mastercard',featured:true},
+  {name:'Plaid',industry:'Fintech',sub:'Banking Infrastructure',val:'$8.0B',stage:'Growth',desc:'Provides connectivity between fintech apps and consumers\' bank accounts, enabling secure access to financial data, balance verification, and transaction facilitation. Powers Venmo, Coinbase, and thousands of apps.',founders:'Zach Perret, William Hockey',founded:'2013',hq:'San Francisco, CA',website:'plaid.com',lead:'NEA',others:'Ribbit Capital, Spark Capital, Citi',featured:true},
+  {name:'Monzo',industry:'Fintech',sub:'Banking Infrastructure',val:'$5.2B',stage:'Growth',desc:'UK\'s fastest-growing digital bank with 10M+ customers. Offers current accounts, savings, loans, and business banking. Became profitable in 2024. Preparing for an IPO.',founders:'Tom Blomfield, Jonas Huckestein',founded:'2015',hq:'London, UK',website:'monzo.com',lead:'CapitalG',others:'Accel, General Catalyst, Y Combinator',featured:true},
+  {name:'Brex',industry:'Fintech',sub:'Payments',val:'$5.2B',stage:'Growth',desc:'Corporate financial infrastructure for startups and enterprise. Offers corporate cards, spend management, and expense automation built natively for high-growth companies. Pivoted to enterprise in 2022.',founders:'Henrique Dubugras, Pedro Franceschi',founded:'2017',hq:'San Francisco, CA',website:'brex.com',lead:'Greenoaks',others:'TCV, Ribbit Capital, DST Global',featured:true},
+  {name:'Mercury',industry:'Fintech',sub:'Banking Infrastructure',val:'$3.5B',stage:'Series C',desc:'Banking platform built for startups. 500,000+ companies bank with Mercury. Applied for a national bank charter in December 2025 — a move that would make it a fully regulated bank.',founders:'Immad Akhund, Jason Zhang',founded:'2017',hq:'San Francisco, CA',website:'mercury.com',lead:'Sequoia Capital',others:'a16z, Coatue Management, CRV',featured:true},
+  {name:'Chime',industry:'Fintech',sub:'Banking Infrastructure',val:'$18.2B',stage:'Series G',desc:'Digital banking platform offering fee-free banking and credit-building tools for millions of Americans underserved by traditional banks. One of the US\'s most valuable neobanks.',founders:'Chris Britt, Ryan King',founded:'2012',hq:'San Francisco, CA',website:'chime.com',lead:'GIC',others:'Tiger Global, SoftBank, Coatue',featured:true},
+  {name:'Ripple',industry:'Fintech',sub:'Payments',val:'$40.0B',stage:'Growth',desc:'Blockchain-based payment infrastructure enabling banks and financial institutions to move money globally in seconds via XRP Ledger and RippleNet. 300+ institutions worldwide.',founders:'Arthur Britto, Chris Larsen, Jed McCaleb',founded:'2012',hq:'San Francisco, CA',website:'ripple.com',lead:'Tetragon',others:'SBI Holdings, Route 66 Ventures',featured:false},
+  {name:'xAI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$50.0B',stage:'Growth',desc:'Elon Musk\'s AI company building Grok, integrated into X (Twitter). Raised $6B in May 2024 and $10B in December 2024, reaching a $50B valuation.',founders:'Elon Musk',founded:'2023',hq:'Memphis, TN',website:'x.ai',lead:'Valor Equity Partners',others:'Andreessen Horowitz, Sequoia Capital',featured:false},
+  {name:'Mistral AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$6.0B',stage:'Growth',desc:'Paris-based AI lab building powerful open-weight and commercial language models. Mixtral models are among the most capable open-source LLMs. Backed by a16z, Lightspeed, and General Catalyst at a $6B valuation.',founders:'Arthur Mensch, Timothée Lacroix, Guillaume Lample',founded:'2023',hq:'Paris, France',website:'mistral.ai',lead:'General Catalyst',others:'Lightspeed, Andreessen Horowitz',featured:false},
+  {name:'Hugging Face',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$4.5B',stage:'Growth',desc:'The GitHub of AI — central hub for open-source machine learning models, datasets, and demos. Hosts 500,000+ models. Raised $235M Series D at a $4.5B valuation.',founders:'Clément Delangue, Julien Chaumond, Thomas Wolf',founded:'2016',hq:'New York, NY',website:'huggingface.co',lead:'Accel',others:'Sequoia Capital, Coatue',featured:false},
+  {name:'Cohere',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$5.0B',stage:'Growth',desc:'Enterprise-grade large language models with a focus on data privacy, on-premise deployment, and RAG. Used by banks, healthcare, and Fortune 500. Raised $500M in 2024 at a $5B valuation.',founders:'Aidan Gomez, Ivan Zhang, Nick Frosst',founded:'2019',hq:'Toronto, Canada',website:'cohere.com',lead:'Index Ventures',others:'Tiger Global, Radical Ventures',featured:false},
+  {name:'Inflection AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$4.0B',stage:'Growth',desc:'Originally built Pi, a personal AI companion. After co-founder Mustafa Suleyman joined Microsoft, pivoted to enterprise AI agent infrastructure. Raised $1.3B from Microsoft and Nvidia.',founders:'Mustafa Suleyman, Reid Hoffman, Karén Simonyan',founded:'2022',hq:'Palo Alto, CA',website:'inflection.ai',lead:'Microsoft',others:'Nvidia, Bill Gates',featured:false},
+  {name:'Glean',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$4.6B',stage:'Growth',desc:'Enterprise AI search connecting to all company apps — Slack, Drive, Salesforce — and surfacing relevant information instantly. Trusted by 1,000+ enterprises. Raised $260M Series E.',founders:'Arvind Jain',founded:'2019',hq:'Palo Alto, CA',website:'glean.com',lead:'Lightspeed Venture Partners',others:'General Catalyst, Kleiner Perkins',featured:false},
+  {name:'Figure AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$2.6B',stage:'Growth',desc:'Builds humanoid robots for warehouses, manufacturing, and logistics. Its Figure 02 robots are trained using AI to perform complex physical tasks. Raised $675M from BMW, Microsoft, and OpenAI.',founders:'Brett Adcock',founded:'2022',hq:'Sunnyvale, CA',website:'figure.ai',lead:'Microsoft',others:'OpenAI Startup Fund, BMW',featured:false},
+  {name:'Cerebras Systems',industry:'AI Infrastructure',sub:'AI Compute',val:'$4.1B',stage:'Series C',desc:'Builds wafer-scale AI chips — the world\'s largest — enabling dramatically faster AI model training. CS-3 chip (900,000 cores) can train models 100x faster than GPU clusters. Filed for IPO in 2024.',founders:'Andrew Feldman, Gary Lauterbach',founded:'2016',hq:'Sunnyvale, CA',website:'cerebras.net',lead:'Fidelity',others:'Atreides Management, Coatue',featured:false},
+  {name:'Lambda Labs',industry:'AI Infrastructure',sub:'AI Compute',val:'$1.5B',stage:'Series C',desc:'GPU cloud provider giving AI researchers and companies on-demand access to NVIDIA H100 and A100 clusters. Raised $320M Series C at a $1.5B valuation. Serves top AI labs and startups.',founders:'Stephen Balaban',founded:'2012',hq:'San Francisco, CA',website:'lambdalabs.com',lead:'Google',others:'Nvidia, SK Telecom, Gradient Ventures',featured:false},
+  {name:'Together AI',industry:'AI Infrastructure',sub:'AI Compute',val:'$1.2B',stage:'Series A',desc:'Cloud platform for running and fine-tuning open-source AI models at fast speeds and low cost. Inference APIs for Llama, Mistral, DBRX. Raised $102.5M Series A at a $1.25B valuation.',founders:'Vipul Ved Prakash, Ce Zhang, Chris Re',founded:'2022',hq:'San Francisco, CA',website:'together.ai',lead:'Kleiner Perkins',others:'Nvidia, Salesforce Ventures, Intel Capital',featured:false},
+  {name:'Anyscale',industry:'AI Infrastructure',sub:'AI Compute',val:'$1.0B',stage:'Series C',desc:'Company behind Ray, the most popular open-source framework for distributed AI. Managed platform helps enterprises scale AI training and inference across any cloud. Raised $100M Series C.',founders:'Robert Nishihara, Philipp Moritz, Ion Stoica',founded:'2019',hq:'San Francisco, CA',website:'anyscale.com',lead:'Andreessen Horowitz',others:'NEA, Intel Capital',featured:false},
+  {name:'Modal',industry:'AI Infrastructure',sub:'AI Compute',val:'$500M',stage:'Series B',desc:'Serverless cloud platform for AI and ML engineers to run code instantly without managing infrastructure. Developers write Python and Modal handles GPU provisioning and scaling automatically.',founders:'Erik Bernhardsson, Akshat Bubna',founded:'2021',hq:'New York, NY',website:'modal.com',lead:'Redpoint Ventures',others:'Unusual Ventures, Haystack',featured:false},
+  {name:'FriendliAI',industry:'AI Infrastructure',sub:'AI Compute',val:'$200M',stage:'Seed',desc:'AI inference platform that invented continuous batching for dynamic LLM traffic. Revenue growing 6-7x year-over-year in 2025. Raised $20M seed extension from SoftBank Ventures Asia.',founders:'Byung-Gon Chun',founded:'2021',hq:'Seoul, South Korea',website:'friendli.ai',lead:'SoftBank Ventures Asia',others:'LG Technology Ventures, Samsung Ventures',featured:false},
+  {name:'Weights & Biases',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.2B',stage:'Series C',desc:'The industry standard for ML experiment tracking. Used by OpenAI, NVIDIA, and 1,000+ organizations to build better ML models faster. Processes 1 billion+ model runs per month.',founders:'Lukas Biewald, Chris Van Pelt, Shawn Lewis',founded:'2017',hq:'San Francisco, CA',website:'wandb.ai',lead:'Insight Partners',others:'Coatue, GV, Trinity Ventures',featured:false},
+  {name:'LangChain',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$400M',stage:'Series A',desc:'The most widely used framework for building LLM-powered applications. LangSmith helps developers debug and monitor AI agents. Raised $25M Series A from Sequoia Capital.',founders:'Harrison Chase',founded:'2022',hq:'San Francisco, CA',website:'langchain.com',lead:'Sequoia Capital',others:'Benchmark, Radical Ventures',featured:false},
+  {name:'Weaviate',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$500M',stage:'Series B',desc:'Open-source vector database for AI-native applications, enabling semantic search and RAG at scale. Used by thousands of developers. Raised $50M Series B from Index Ventures.',founders:'Bob van Luijt, Etienne Dilocker',founded:'2019',hq:'Amsterdam, Netherlands',website:'weaviate.io',lead:'Index Ventures',others:'Battery Ventures, Cortical Ventures',featured:false},
+  {name:'Pinecone',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$750M',stage:'Series B',desc:'Leading managed vector database for building AI applications at scale. Powers similarity search and RAG pipelines for thousands of enterprises. Raised $100M Series B from a16z.',founders:'Edo Liberty',founded:'2019',hq:'San Francisco, CA',website:'pinecone.io',lead:'Andreessen Horowitz',others:'Menlo Ventures, Wing VC',featured:false},
+  {name:'Exa',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$600M',stage:'Series B',desc:'AI-native search engine providing real-time, full-content search optimized for AI agents and LLMs. Sub-500ms searches with data privacy safeguards. Raised $85M Series B.',founders:'Jeff Wang, Keiran Paster',founded:'2022',hq:'San Francisco, CA',website:'exa.ai',lead:'Bond',others:'CapitalG, Premji Invest, IVP, Spark Capital',featured:false},
+  {name:'Neon',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$400M',stage:'Series B',desc:'Serverless Postgres database platform built for AI applications, offering instant branching, autoscaling, and scale-to-zero. Widely used by developers building AI-native apps. Raised $46M from GV.',founders:'Nikita Shamgunov',founded:'2021',hq:'San Francisco, CA',website:'neon.tech',lead:'Google Ventures',others:'General Catalyst, Khosla Ventures',featured:false},
+  {name:'Replicate',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$350M',stage:'Series B',desc:'Cloud platform for running ML models via a simple API. Hosts thousands of models including Stable Diffusion and Llama. Raised $40M Series B from Andreessen Horowitz.',founders:'Ben Firshman, Andreas Jansson',founded:'2019',hq:'San Francisco, CA',website:'replicate.com',lead:'Andreessen Horowitz',others:'Y Combinator, Index Ventures',featured:false},
+  {name:'ElevenLabs',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$3.3B',stage:'Growth',desc:'AI voice platform generating ultra-realistic synthetic speech across 30+ languages. Used by publishers, game developers, and enterprises. Raised $330M Series C in early 2025 at a $3.3B valuation.',founders:'Mati Staniszewski, Piotr Dabkowski',founded:'2022',hq:'New York, NY',website:'elevenlabs.io',lead:'Nat Friedman',others:'Andreessen Horowitz, Sequoia Capital',featured:false},
+  {name:'Runway',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.5B',stage:'Series C',desc:'Multimodal AI research company building tools for video generation and creative AI. Gen-3 models produce professional-quality AI video used by major film studios. Raised $141M Series C.',founders:'Cristobal Valenzuela, Alejandro Matamala',founded:'2018',hq:'New York, NY',website:'runwayml.com',lead:'Google',others:'Nvidia, Salesforce Ventures, Felicis',featured:false},
+  {name:'Midjourney',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.0B',stage:'Seed',desc:'Generative AI image platform producing high-quality artistic images from text prompts. Bootstrapped to profitability with 20M+ users and over $200M ARR. No external venture capital raised.',founders:'David Holz',founded:'2021',hq:'San Francisco, CA',website:'midjourney.com',lead:'Bootstrapped',others:'',featured:false},
+  {name:'Suno AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$500M',stage:'Series B',desc:'Generative AI music platform creating full songs from text prompts in seconds, including vocals and instrumentation. Reached millions of users in 2024. Raised $125M Series B from Lightspeed.',founders:'Mikey Shulman, Georg Kucsko',founded:'2022',hq:'Cambridge, MA',website:'suno.com',lead:'Lightspeed',others:'Founder Collective, Matrix Partners',featured:false},
+  {name:'Replit',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.2B',stage:'Series B',desc:'AI-powered cloud coding platform where developers build, run, and deploy apps in the browser. Its AI agent builds full-stack apps from natural language. 35M+ users. Raised $97.4M Series B.',founders:'Amjad Masad, Haya Odeh',founded:'2016',hq:'San Francisco, CA',website:'replit.com',lead:'Andreessen Horowitz',others:'Google Ventures, Coatue',featured:false},
+  {name:'Character.AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.0B',stage:'Series A',desc:'Platform where users create and chat with AI-powered characters. Reached 20M daily active users faster than any consumer app in history. Raised $150M Series A from Andreessen Horowitz.',founders:'Noam Shazeer, Daniel De Freitas',founded:'2021',hq:'Menlo Park, CA',website:'character.ai',lead:'Andreessen Horowitz',others:'Google Ventures, SV Angel',featured:false},
+  {name:'Braintrust',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$250M',stage:'Series A',desc:'AI evaluation and observability platform for testing, debugging, and monitoring LLM applications in production. Used by OpenAI, Stripe, and Notion. Raised $36M Series A from a16z.',founders:'Ankur Goyal',founded:'2022',hq:'San Francisco, CA',website:'braintrust.dev',lead:'Andreessen Horowitz',others:'Elad Gil, Naval Ravikant',featured:false},
+  {name:'Vercel',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$3.2B',stage:'Growth',desc:'Cloud platform powering frontend development at scale, home of Next.js. Used by 1M+ developers. Raised $250M Series E at $3.25B. Now pivoting toward AI-native app infrastructure.',founders:'Guillermo Rauch',founded:'2015',hq:'San Francisco, CA',website:'vercel.com',lead:'Accel',others:'Bedrock, CRV',featured:false},
+  {name:'Stability AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.0B',stage:'Series A',desc:'Creator of Stable Diffusion, the most widely used open-source image generation model. Builds open foundation models across text, image, audio, and video. Refocused on enterprise AI in 2024.',founders:'Emad Mostaque',founded:'2020',hq:'London, UK',website:'stability.ai',lead:'Coatue',others:'Lightspeed, O\'Shaughnessy Ventures',featured:false},
+  {name:'Orca Security',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.8B',stage:'Series C',desc:'Cloud security platform providing agentless visibility into cloud infrastructure risk across AWS, Azure, and GCP. Detects vulnerabilities in minutes. Raised $550M total at a $1.8B valuation.',founders:'Avi Shua, Gil Geron',founded:'2019',hq:'Portland, OR',website:'orca.security',lead:'Temasek',others:'GIC, ICONIQ Growth',featured:false},
+  {name:'Airtable',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$11.7B',stage:'Series D+',desc:'Connected app platform that democratizes database-building. Used by 500,000+ organizations including Netflix and the New York Times. AI integrations and automation tools make it a key data infrastructure layer. Raised $270M at $11.7B.',founders:'Howie Liu, Andrew Ofstad, Emmett Nicholas',founded:'2012',hq:'San Francisco, CA',website:'airtable.com',lead:'Coatue',others:'Tiger Global, Andreessen Horowitz',featured:false},
+  {name:'Notion',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$10.0B',stage:'Series C',desc:'All-in-one workspace for notes, docs, databases, and project management. Used by 100M+ users and 50%+ of Fortune 500. Aggressively expanded into AI-native features. Raised $275M at a $10B valuation.',founders:'Ivan Zhao, Simon Last',founded:'2016',hq:'San Francisco, CA',website:'notion.so',lead:'Sequoia Capital',others:'Coatue, Index Ventures',featured:false},
+  {name:'Descript',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$550M',stage:'Series C',desc:'AI-powered audio and video editing platform. Edit media like a text document. Used by podcasters, YouTubers, and media companies. Raised $50M Series C from Andreessen Horowitz.',founders:'Andrew Mason',founded:'2017',hq:'San Francisco, CA',website:'descript.com',lead:'Andreessen Horowitz',others:'Redpoint Ventures, Spark Capital',featured:false},
+  {name:'Baseten',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$2.1B',stage:'Series D+',desc:'AI inference and deployment platform enabling enterprises to deploy and manage AI models at scale. Streamlines model deployment and optimizes inference costs. Raised $150M Series D at a $2.15B valuation.',founders:'Tuhin Srivastava, Phil Howes, Jamiel Sheikh',founded:'2019',hq:'San Francisco, CA',website:'baseten.co',lead:'IVP',others:'Spark Capital, Greylock',featured:false},
+  {name:'Fireworks AI',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$552M',stage:'Series C',desc:'Model inference platform for deploying and fine-tuning open-source AI models at production speed. Built by ex-Google Brain engineers. Raised $52M Series B at a $552M valuation.',founders:'Lin Qiao, Aditya Agrawal',founded:'2022',hq:'Redwood City, CA',website:'fireworks.ai',lead:'General Catalyst',others:'Lightspeed, Nvidia, Sequoia',featured:false},
+  {name:'Deel',industry:'Fintech',sub:'Banking Infrastructure',val:'$12.0B',stage:'Series D+',desc:'All-in-one global HR and payroll platform enabling companies to hire, pay, and manage employees in 150+ countries. Processes billions in payroll monthly for 35,000+ clients. Raised $425M Series D.',founders:'Alex Bouaziz, Shuo Wang',founded:'2019',hq:'San Francisco, CA',website:'deel.com',lead:'Andreessen Horowitz',others:'Spark Capital, Coatue, Tiger Global',featured:false},
+  {name:'Navan',industry:'Fintech',sub:'Banking Infrastructure',val:'$9.2B',stage:'Growth',desc:'All-in-one travel, corporate card, and expense management platform. Fintech business grew 100% annually, processing billions in corporate spend. Filed for IPO in 2025 at a $9.2B valuation.',founders:'Ariel Cohen, Ilan Twig',founded:'2015',hq:'Palo Alto, CA',website:'navan.com',lead:'Andreessen Horowitz',others:'Lightspeed, Greenoaks, Coatue',featured:false},
+  {name:'Chainalysis',industry:'Fintech',sub:'Payments',val:'$8.6B',stage:'Growth',desc:'Leading blockchain data analytics company providing compliance and investigation tools to governments, exchanges, and institutions. Used by the IRS, FBI, and 500+ companies to detect crypto fraud.',founders:'Michael Gronager, Jan Moller',founded:'2014',hq:'New York, NY',website:'chainalysis.com',lead:'Accel',others:'Addition, Ribbit Capital',featured:false},
+  {name:'SumUp',industry:'Fintech',sub:'Payments',val:'$8.0B',stage:'Growth',desc:'SMB payments company offering card readers, POS systems, and business accounts to 4M+ merchants across 36 countries. Dominant player in European merchant payments. Valued at ~$8B.',founders:'Marc-Alexander Christ, Daniel Klein',founded:'2011',hq:'London, UK',website:'sumup.co.uk',lead:'Bain Capital',others:'Goldman Sachs, Temasek',featured:false},
+  {name:'Rapyd',industry:'Fintech',sub:'Payments',val:'$8.8B',stage:'Growth',desc:'Global fintech-as-a-service platform offering payment acceptance, payout disbursement, and embedded financial services in 100+ countries. Localizes payment infrastructure without building from scratch.',founders:'Arik Shtilman, Arkady Karpman, Omer Priel',founded:'2016',hq:'London, UK',website:'rapyd.net',lead:'Target Global',others:'General Catalyst, Oak HC/FT',featured:false},
+  {name:'FNZ',industry:'Fintech',sub:'Wealthtech',val:'$20.0B',stage:'Growth',desc:'Global B2B wealth management platform managing $1.5T+ in assets for banks, insurers, and advisors across 20+ markets. Powers end-to-end investment infrastructure for major financial institutions.',founders:'Adrian Durham',founded:'2004',hq:'London, UK',website:'fnz.com',lead:'Temasek',others:'Caisse de dépôt et placement du Québec',featured:false},
+  {name:'Robinhood',industry:'Fintech',sub:'Wealthtech',val:'$20.0B',stage:'Growth',desc:'Democratized retail investing with commission-free trading in stocks, ETFs, options, and crypto for 23M+ funded accounts. Went public in 2021 and expanded into retirement, credit cards, and international markets.',founders:'Vlad Tenev, Baiju Bhatt',founded:'2013',hq:'Menlo Park, CA',website:'robinhood.com',lead:'Sequoia Capital',others:'Ribbit Capital, NEA, Index Ventures',featured:false},
+  {name:'Kraken',industry:'Fintech',sub:'Payments',val:'$20.0B',stage:'Growth',desc:'One of the world\'s largest crypto exchanges, offering spot and futures trading across 200+ digital assets. Serves 10M+ clients in 190+ countries. Expanded into crypto banking services.',founders:'Jesse Powell, Michael Gronager',founded:'2011',hq:'San Francisco, CA',website:'kraken.com',lead:'Tribe Capital',others:'Hummingbird Ventures, Blockchain Capital',featured:false},
+  {name:'Toss',industry:'Fintech',sub:'Payments',val:'$7.0B',stage:'Growth',desc:'South Korean fintech providing a mobile financial platform for payments, money transfers, credit scoring, and investment services. One of the leading neobanks in Asia.',founders:'SG Lee',founded:'2015',hq:'Seoul, South Korea',website:'toss.im',lead:'Kakao Ventures',others:'PayPal, Sequoia Capital, GIC',featured:false},
+  {name:'N26',industry:'Fintech',sub:'Banking Infrastructure',val:'$9.0B',stage:'Growth',desc:'Berlin-based digital bank offering mobile banking accounts, sub-accounts, and investment products to 8M+ customers across 24 countries. One of Europe\'s leading fully licensed neobanks.',founders:'Valentin Stalf, Maximilian Tayenthal',founded:'2013',hq:'Berlin, Germany',website:'n26.com',lead:'Insight Partners',others:'Tencent, Allianz X',featured:false},
+  {name:'Checkout.com',industry:'Fintech',sub:'Payments',val:'$11.0B',stage:'Growth',desc:'Global payment processing platform helping businesses accept payments in 150+ currencies. Processes billions for Grab, Klarna, and Pizza Hut. Valued at $11B.',founders:'Guillaume Pousaz',founded:'2012',hq:'London, UK',website:'checkout.com',lead:'Insight Partners',others:'DST Global, Blossom Capital',featured:false},
+  {name:'PhonePe',industry:'Fintech',sub:'Payments',val:'$12.0B',stage:'Growth',desc:'India\'s leading digital payments platform on the UPI network, processing 50%+ of all UPI transactions. 500M+ registered users. Expanded into insurance, mutual funds, and lending.',founders:'Burzin Engineer, Rahul Chari, Sameer Nigam',founded:'2015',hq:'Maharashtra, India',website:'phonepe.com',lead:'General Atlantic',others:'Walmart, Tiger Global',featured:false},
+  {name:'Aven',industry:'Fintech',sub:'Lending',val:'$1.0B',stage:'Series D+',desc:'First product combining home equity lending with a credit card. Cardholders get APRs as low as 7.99% backed by home equity. Raised $142M Series D at a $1B+ valuation.',founders:'Sadi Khan',founded:'2019',hq:'San Francisco, CA',website:'aven.com',lead:'Khosla Ventures',others:'Founders Fund, General Catalyst',featured:false},
+  {name:'Parafin',industry:'Fintech',sub:'Lending',val:'$800M',stage:'Series C',desc:'Embedded capital platform enabling DoorDash and Amazon to offer revenue-based financing to their merchants. Achieved 400% transaction volume growth in 2024. Raised $100M Series C.',founders:'Sahill Poddar, Vineet Goel',founded:'2020',hq:'San Francisco, CA',website:'parafin.com',lead:'Ribbit Capital',others:'GIC, Thrive Capital',featured:false},
+  {name:'GoodLeap',industry:'Fintech',sub:'Lending',val:'$12.0B',stage:'Growth',desc:'Largest sustainable home improvement financing platform in the US, offering point-of-sale financing for solar and HVAC through 30,000+ contractors.',founders:'Hayes Barnard',founded:'2003',hq:'USA',website:'goodleap.com',lead:'Goldman Sachs',others:'Blackstone, KKR',featured:false},
+  {name:'Pipe',industry:'Fintech',sub:'Lending',val:'$700M',stage:'Series C',desc:'Revenue-based financing platform for SaaS businesses to advance their ARR. Pivoted to embedded capital infrastructure for B2B platforms. Raised $316M total funding.',founders:'Luke Voiles',founded:'2019',hq:'Miami, FL',website:'pipe.com',lead:'Siemens Next47',others:'Tiger Global, Shopify',featured:false},
+  {name:'Unit',industry:'Fintech',sub:'Banking Infrastructure',val:'$1.2B',stage:'Series C',desc:'Banking-as-a-service platform enabling software companies to embed banking products into their apps. Trusted by 125+ companies. Raised $100M Series C at a $1.2B valuation from Insight Partners.',founders:'Itai Damti, Doron Somech',founded:'2019',hq:'New York, NY',website:'unit.co',lead:'Insight Partners',others:'Better Tomorrow Ventures, Accel',featured:false},
+  {name:'Stytch',industry:'Fintech',sub:'Banking Infrastructure',val:'$1.0B',stage:'Series B',desc:'Developer-first authentication and identity platform providing passwordless login, SSO, and fraud prevention APIs. Trusted by hundreds of companies. Raised $90M Series B at a $1B valuation.',founders:'Reed McGinley-Stempel, Julianna Lamb',founded:'2020',hq:'San Francisco, CA',website:'stytch.com',lead:'Coatue',others:'Benchmark, Thrive Capital',featured:false},
+  {name:'Modern Treasury',industry:'Fintech',sub:'Banking Infrastructure',val:'$2.0B',stage:'Series C',desc:'Payment operations platform automating money movement, reconciliation, and ledgering for companies moving large amounts. Used by Affirm, Marqeta, and Gusto. Raised $85M Series C at a $2B valuation.',founders:'Dimitri Dadiomov, Sam Aarons, Matt Marcus',founded:'2018',hq:'San Francisco, CA',website:'moderntreasury.com',lead:'Altimeter Capital',others:'Y Combinator, Benchmark',featured:false},
+  {name:'Increase',industry:'Fintech',sub:'Banking Infrastructure',val:'$200M',stage:'Series A',desc:'Banking API giving software companies direct access to the Fed\'s payment systems — ACH, wires, and checks — without a bank sponsor. Trusted by fintechs and neobanks. Raised from Sequoia and Stripe.',founders:'Alexis Goldstein, Peter Paradis',founded:'2019',hq:'San Francisco, CA',website:'increase.com',lead:'Sequoia Capital',others:'Y Combinator, Stripe',featured:false},
+  {name:'Rulebase',industry:'Fintech',sub:'Banking Infrastructure',val:'$20M',stage:'Pre-seed',desc:'AI-powered compliance logic platform for financial systems. Low-code policy engine replacing manual compliance workflows with real-time automated rules for banks and fintechs.',founders:'Undisclosed',founded:'2022',hq:'San Francisco, CA',website:'rulebase.ai',lead:'Bowery Capital',others:'Y Combinator, Commerce Ventures',featured:false},
+  {name:'Marqeta',industry:'Fintech',sub:'Payments',val:'$3.5B',stage:'Growth',desc:'Modern card issuing platform powering debit and prepaid cards for DoorDash, Affirm, and Square. Open API enables real-time, programmable payment programs. Processes $200B+ in annual volume.',founders:'Jason Gardner',founded:'2010',hq:'Oakland, CA',website:'marqeta.com',lead:'Visa',others:'Goldman Sachs, Coatue',featured:false},
+  {name:'Nuvei',industry:'Fintech',sub:'Payments',val:'$6.0B',stage:'Growth',desc:'Global payment technology company offering acquiring, processing, and banking services to merchants in 200+ markets. Supports 600+ alternative payment methods and 150 currencies.',founders:'Philip Fayer',founded:'2003',hq:'Montreal, Canada',website:'nuvei.com',lead:'Advent International',others:'Novacap, BDC Capital',featured:false},
+  {name:'Xendit',industry:'Fintech',sub:'Payments',val:'$1.2B',stage:'Series D+',desc:'Southeast Asia\'s leading payment infrastructure company. The Stripe of SEA — processing for 5,000+ businesses across Indonesia, Philippines, and Vietnam. Raised $300M Series D.',founders:'Moses Lo, Bo Chen, Tessa Wijaya',founded:'2015',hq:'Jakarta, Indonesia',website:'xendit.co',lead:'Tiger Global',others:'Accel, Y Combinator, Amasia',featured:false},
+  {name:'Paysend',industry:'Fintech',sub:'Payments',val:'$700M',stage:'Series B',desc:'Global fintech enabling fast and affordable cross-border money transfers to 170+ countries. Serves 8M+ customers and processes $10B+ in annual volume. Raised $125M Series B.',founders:'Ronnie Millar, Abdul Abdulkerimov',founded:'2017',hq:'London, UK',website:'paysend.com',lead:'One Peak',others:'Infravia Capital, SBI Investment',featured:false},
+  {name:'Bolt',industry:'Fintech',sub:'Payments',val:'$11.0B',stage:'Series D+',desc:'One-click checkout platform enabling e-commerce brands to dramatically improve conversion rates. Competes with Shop Pay. Raised $355M at an $11B valuation from Activant Capital.',founders:'Ryan Breslow',founded:'2014',hq:'San Francisco, CA',website:'bolt.eu',lead:'Activant Capital',others:'BlackRock, General Atlantic',featured:false},
+  {name:'Socure',industry:'Fintech',sub:'Banking Infrastructure',val:'$4.5B',stage:'Growth',desc:'AI-powered digital identity verification serving 3,000+ customers including 18 of the top 20 US banks. Generated $315M ARR in 2025 and completed 5 billion+ identity verifications.',founders:'Johnny Ayers',founded:'2012',hq:'Incline Village, NV',website:'socure.com',lead:'Accel',others:'Tiger Global, Commerce Ventures',featured:false},
+  {name:'Sardine',industry:'Fintech',sub:'Banking Infrastructure',val:'$400M',stage:'Series B',desc:'AI-powered fraud prevention and compliance platform for fintechs, crypto companies, and banks. Uses device intelligence and behavior biometrics to stop fraud in real time. Raised $51.5M Series B.',founders:'Soups Ranjan, Aditya Goel, Zahid Shaikh',founded:'2020',hq:'San Francisco, CA',website:'sardine.ai',lead:'Andreessen Horowitz',others:'Nyca Partners, Accel',featured:false},
+  {name:'Fireblocks',industry:'Fintech',sub:'Banking Infrastructure',val:'$8.0B',stage:'Series D+',desc:'Enterprise-grade digital asset security platform enabling banks, exchanges, and fintechs to move, store, and issue digital assets securely. Secured $7T+ in transactions for 2,000+ organizations.',founders:'Michael Shaulov, Pavel Berengoltz, Idan Ofrat',founded:'2018',hq:'New York, NY',website:'fireblocks.com',lead:'Sequoia Capital',others:'Coatue, Tiger Global, BNY Mellon',featured:false},
+  {name:'Clear Street',industry:'Fintech',sub:'Wealthtech',val:'$2.1B',stage:'Series B',desc:'Cloud-native prime brokerage modernizing capital markets for hedge funds and institutional investors. Offers clearing, custody, execution, and financing across multiple asset classes. Raised $435M.',founders:'Chris Pento, Sachin Kumar',founded:'2018',hq:'New York, NY',website:'clearstreet.io',lead:'Prysm Capital',others:'Goldman Sachs, Interactive Brokers',featured:false},
+  {name:'Dune Analytics',industry:'Fintech',sub:'Wealthtech',val:'$1.0B',stage:'Series B',desc:'Data analytics platform for blockchain and crypto data, allowing anyone to query on-chain data with SQL. Widely used by DeFi researchers and VCs. Raised $69.4M Series B at a $1B valuation.',founders:'Fredrik Haga, Mats Olsen',founded:'2018',hq:'Oslo, Norway',website:'dune.com',lead:'Multicoin Capital',others:'Dragonfly Capital, Electric Capital',featured:false},
+  {name:'Human Interest',industry:'Fintech',sub:'Wealthtech',val:'$1.3B',stage:'Series D+',desc:'Embedded 401(k) retirement platform serving 50,000 small businesses and 2M+ employees. Partners with payroll providers to offer affordable retirement benefits to underserved SMBs. Valued at $1.33B.',founders:'Jeff Schneble, Paul Sawaya',founded:'2015',hq:'San Francisco, CA',website:'humaninterest.com',lead:'U.S. Venture Partners',others:'Andreessen Horowitz, Crosslink Capital',featured:false},
+  {name:'Column Tax',industry:'Fintech',sub:'Banking Infrastructure',val:'$150M',stage:'Series A',desc:'White-label tax filing API letting fintechs embed tax filing into their products. Powers tax filing for Coinbase, Cash App, and others. Raised $16.5M Series A from Andreessen Horowitz.',founders:'Welly Sculley, Josh Browder',founded:'2021',hq:'San Francisco, CA',website:'column.tax',lead:'Andreessen Horowitz',others:'Y Combinator, General Catalyst',featured:false},
+  {name:'Pomelo',industry:'Fintech',sub:'Banking Infrastructure',val:'$300M',stage:'Series B',desc:'Neobank for Latin American immigrants in the US combining a credit card with international money transfers. Helps users build US credit history while sending money home. Raised $40M Series B from Founders Fund.',founders:'Hernan Paz, James Friedman',founded:'2021',hq:'San Francisco, CA',website:'pomelofin.com',lead:'Founders Fund',others:'Y Combinator, Kleiner Perkins',featured:false},
+  {name:'Current',industry:'Fintech',sub:'Banking Infrastructure',val:'$2.2B',stage:'Series D+',desc:'Mobile banking platform for everyday Americans with checking accounts, savings pods, and credit-building tools. Serves 4M+ members with instant paycheck access. Raised $200M at a $2.2B valuation.',founders:'Stuart Sopp, Trevor Marshall',founded:'2015',hq:'New York, NY',website:'current.com',lead:'Andreessen Horowitz',others:'Tiger Global, Sapphire Ventures',featured:false},
+  {name:'Lili',industry:'Fintech',sub:'Payments',val:'$450M',stage:'Series C',desc:'Banking app built exclusively for freelancers, offering a business bank account, tax automation, and expense tracking in one app. Raised $80M Series C at a $450M valuation.',founders:'Lilac Bar David, Liran Zelkha',founded:'2018',hq:'New York, NY',website:'lili.co',lead:'Group 11',others:'Target Global, Torch Capital',featured:false},
+  {name:'Coalition',industry:'Fintech',sub:'Banking Infrastructure',val:'$5.0B',stage:'Series D+',desc:'Cyber insurance and active security platform serving 160,000+ organizations across North America and the UK. Policies include 24/7 incident response. Raised $800M total at a $5B valuation.',founders:'Joshua Motta, John Hering',founded:'2017',hq:'San Francisco, CA',website:'coalitioninc.com',lead:'Index Ventures',others:'Valor Equity Partners, Ribbit Capital',featured:false},
+  {name:'Highnote',industry:'Fintech',sub:'Payments',val:'$781M',stage:'Series B',desc:'Modern card issuing platform allowing fintech companies and enterprises to launch credit, debit, and prepaid card programs with greater flexibility than traditional processors.',founders:'John MacIlwaine, Kin Kee',founded:'2020',hq:'San Francisco, CA',website:'highnote.com',lead:'Costanoa Ventures',others:'a16z, Menlo Ventures',featured:false},
+  {name:'Synthesia',industry:'AI Infrastructure',sub:'AI Developer Tools',val:'$1.0B',stage:'Series C',desc:'AI video generation platform creating professional videos from text using AI avatars. Used by 50,000+ companies including Reuters, Nike, and BBC. Raised $90M Series C at a $1B valuation.',founders:'Victor Riparbelli, Steffen Tjerrild',founded:'2017',hq:'London, UK',website:'synthesia.io',lead:'NEA',others:'Kleiner Perkins, GV',featured:false},
+  {name:'Alaan',industry:'Fintech',sub:'Payments',val:'$200M',stage:'Series A',desc:'Middle East\'s leading AI-powered spend management platform providing corporate cards and expense automation for businesses across the GCC region.',founders:'Parthi Duraisami, Karim Jouini',founded:'2021',hq:'Dubai, UAE',website:'alaan.com',lead:'Quona Capital',others:'Wamda, 9900 Capital',featured:false}
+];
 
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  cursor.style.left = mouseX - 4 + 'px';
-  cursor.style.top = mouseY - 4 + 'px';
-});
+// Deduplicate by name
+const seen = new Set();
+const COMPANIES = DATA.filter(d => { if(seen.has(d.name)) return false; seen.add(d.name); return true; });
 
-function animateRing() {
-  ringX += (mouseX - ringX) * 0.12;
-  ringY += (mouseY - ringY) * 0.12;
-  cursorRing.style.left = ringX - 16 + 'px';
-  cursorRing.style.top = ringY - 16 + 'px';
-  requestAnimationFrame(animateRing);
+// Category counts
+const ftCount = COMPANIES.filter(c=>c.industry==='Fintech').length;
+const aiCount = COMPANIES.filter(c=>c.industry==='AI Infrastructure').length;
+document.getElementById('ft-count').textContent = ftCount + ' companies';
+document.getElementById('ai-count').textContent = aiCount + ' companies';
+
+// Top Picks — Featured companies, up to 3
+const featured = COMPANIES.filter(c=>c.featured).slice(0,3);
+const pickLabels = [{cls:'p-hot',label:'In Focus This Week'},{cls:'p-rise',label:'Rising Fast'},{cls:'p-watch',label:'One to Watch'}];
+document.getElementById('picks-grid').innerHTML = featured.map((c,i)=>{
+  const {cls,label} = pickLabels[i];
+  return `<div class="pick ${cls}" onclick="openM(${i}, true)">
+    <span class="pick-label">${label}</span>
+    <div class="pick-name">${c.name}</div>
+    <div class="pick-why">${c.desc.slice(0,130)}...</div>
+    <div class="pick-foot"><span class="pick-val">${c.val}</span><span class="pick-sep">&middot;</span><span class="pick-cat">${c.industry}</span></div>
+    <span class="pick-arr">&nearr;</span>
+  </div>`;
+}).join('');
+
+// Database
+let curFilter = 'all', visN = 20;
+function getFiltered(){ return curFilter==='all' ? COMPANIES : COMPANIES.filter(c=>c.industry===curFilter||c.sub===curFilter); }
+
+function renderDB(){
+  const list = getFiltered();
+  const slice = list.slice(0, visN);
+  document.getElementById('db-title').textContent = (curFilter==='all' ? 'All '+COMPANIES.length : curFilter) + ' Companies';
+  document.getElementById('db-grid').innerHTML = slice.map((c,i)=>{
+    const ai = c.industry==='AI Infrastructure';
+    return `<div class="dcard" onclick="openMByName('${c.name.replace(/'/g,"\\'")}') " style="transition:opacity .4s ease ${(i%4)*.055}s, transform .4s ease ${(i%4)*.055}s">
+      <div class="dcard-top"><span class="dcard-name">${c.name}</span><span class="dtag ${ai?'ai':'fin'}">${ai?'AI':'Fintech'}</span></div>
+      <div class="dcard-val">${c.val}</div>
+      <div class="dcard-stage">${c.stage}</div>
+      <div class="dcard-desc">${c.desc.slice(0,95)}</div>
+      <span class="dcard-arr">&nearr;</span>
+    </div>`;
+  }).join('');
+  setTimeout(()=>document.querySelectorAll('.dcard').forEach(d=>d.classList.add('vis')),50);
+  const btn = document.getElementById('lmbtn');
+  btn.style.display = list.length > visN ? 'block' : 'none';
+  btn.textContent = 'Load more (' + (list.length-visN) + ' remaining)';
 }
-animateRing();
 
-document.querySelectorAll('a, button, .card, .category-card').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.transform = 'scale(2)';
-    cursorRing.style.transform = 'scale(1.5)';
-    cursorRing.style.borderColor = 'rgba(168, 213, 162, 0.8)';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.transform = 'scale(1)';
-    cursorRing.style.transform = 'scale(1)';
-    cursorRing.style.borderColor = 'rgba(168, 213, 162, 0.5)';
-  });
-});
-
-// Navbar scroll
-window.addEventListener('scroll', () => {
-  const nav = document.getElementById('navbar');
-  if (window.scrollY > 60) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
-});
-
-// Three.js Globe
-const canvas = document.getElementById('globe-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 2.8;
-
-// Globe geometry
-const geometry = new THREE.SphereGeometry(1, 32, 32);
-const wireframe = new THREE.WireframeGeometry(geometry);
-const material = new THREE.LineBasicMaterial({
-  color: 0xA8D5A2,
-  transparent: true,
-  opacity: 0.25,
-});
-const globe = new THREE.LineSegments(wireframe, material);
-scene.add(globe);
-
-// Glow sphere
-const glowGeo = new THREE.SphereGeometry(1.02, 32, 32);
-const glowMat = new THREE.MeshBasicMaterial({
-  color: 0xA8D5A2,
-  transparent: true,
-  opacity: 0.03,
-  side: THREE.BackSide
-});
-const glow = new THREE.Mesh(glowGeo, glowMat);
-scene.add(glow);
-
-let mouseGlobeX = 0, mouseGlobeY = 0;
-let targetRotX = 0, targetRotY = 0;
-
-document.addEventListener('mousemove', (e) => {
-  mouseGlobeX = (e.clientX / window.innerWidth - 0.5) * 0.3;
-  mouseGlobeY = (e.clientY / window.innerHeight - 0.5) * 0.3;
-});
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-function animateGlobe() {
-  requestAnimationFrame(animateGlobe);
-  globe.rotation.y += 0.002;
-  targetRotX += (mouseGlobeY - targetRotX) * 0.05;
-  targetRotY += (mouseGlobeX - targetRotY) * 0.05;
-  globe.rotation.x = targetRotX;
-  globe.rotation.y += targetRotY * 0.01;
-  glow.rotation.copy(globe.rotation);
-  renderer.render(scene, camera);
+function filt(f, btn){
+  curFilter=f; visN=20;
+  if(btn){ document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
+  renderDB();
 }
-animateGlobe();
+function loadMore(){ visN+=20; renderDB(); }
+renderDB();
 
-// Intersection Observer for animations
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+// Modal
+function openM(idx, fromFeatured){
+  const list = fromFeatured ? COMPANIES.filter(c=>c.featured) : getFiltered();
+  const c = list[idx];
+  if(!c) return;
+  document.getElementById('mn').textContent = c.name;
+  document.getElementById('mdesc').textContent = c.desc;
+  document.getElementById('mval').textContent = c.val;
+  document.getElementById('mstage').textContent = c.stage;
+  document.getElementById('mfounded').textContent = c.founded;
+  document.getElementById('mhq').textContent = c.hq;
+  document.getElementById('mfounder').textContent = c.founders;
+  document.getElementById('mlead').textContent = c.lead;
+  const ai = c.industry==='AI Infrastructure';
+  document.getElementById('mtags').innerHTML = `<span class="dtag ${ai?'ai':'fin'}">${c.industry}</span>`;
+  document.getElementById('mpills').innerHTML = (c.others||'').split(',').filter(Boolean).map(i=>`<span class="mpill">${i.trim()}</span>`).join('');
+  const w = document.getElementById('mweb');
+  const url = c.website.startsWith('http') ? c.website : 'https://'+c.website;
+  w.href=url; w.textContent=c.website.replace(/https?:\/\//,'');
+  document.getElementById('mov').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function openMByName(name){
+  const idx = getFiltered().findIndex(c=>c.name===name);
+  if(idx>=0) openM(idx, false);
+}
+function cm(){ document.getElementById('mov').classList.remove('on'); document.body.style.overflow=''; }
+function cmbg(e){ if(e.target===document.getElementById('mov')) cm(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') cm(); });
+
+// ── ENHANCED INTERACTIVE GLOBE ──
+const cv=document.getElementById('globe-canvas');
+const cx=cv.getContext('2d');
+let W,H;
+let ry=0,rx=0.3;
+let targetRY=0,targetRX=0.3;
+let isDragging=false,lastX=0,lastY=0;
+let velX=0,velY=0;
+let mouseOverHero=false;
+
+const rsz=()=>{W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight};
+rsz();window.addEventListener('resize',rsz);
+
+// City dots — major financial & tech hubs
+const CITIES=[
+  {lat:40.71,lon:-74.01,name:'New York'},
+  {lat:37.77,lon:-122.42,name:'San Francisco'},
+  {lat:51.51,lon:-0.13,name:'London'},
+  {lat:35.69,lon:139.69,name:'Tokyo'},
+  {lat:1.35,lon:103.82,name:'Singapore'},
+  {lat:48.85,lon:2.35,name:'Paris'},
+  {lat:52.52,lon:13.40,name:'Berlin'},
+  {lat:55.75,lon:37.62,name:'Moscow'},
+  {lat:-23.55,lon:-46.63,name:'São Paulo'},
+  {lat:43.65,lon:-79.38,name:'Toronto'},
+  {lat:31.23,lon:121.47,name:'Shanghai'},
+  {lat:22.32,lon:114.17,name:'Hong Kong'},
+  {lat:19.08,lon:72.88,name:'Mumbai'},
+  {lat:-33.87,lon:151.21,name:'Sydney'},
+  {lat:25.20,lon:55.27,name:'Dubai'},
+  {lat:59.33,lon:18.07,name:'Stockholm'},
+  {lat:37.57,lon:126.98,name:'Seoul'},
+];
+
+// Arc connections between cities
+const ARCS=[
+  [0,1],[0,2],[1,2],[2,5],[2,6],[0,9],
+  [1,10],[2,11],[3,11],[4,11],[10,11],
+  [0,13],[2,14],[5,6],[3,4],[1,8]
+];
+
+const heroEl=document.getElementById('hero');
+heroEl.addEventListener('mouseenter',()=>mouseOverHero=true);
+heroEl.addEventListener('mouseleave',()=>mouseOverHero=false);
+
+// Drag to rotate
+cv.addEventListener('mousedown',e=>{
+  isDragging=true;lastX=e.clientX;lastY=e.clientY;velX=0;velY=0;
+  cv.style.cursor='grabbing';
+});
+window.addEventListener('mousemove',e=>{
+  if(!isDragging)return;
+  const dx=e.clientX-lastX,dy=e.clientY-lastY;
+  velX=dx*.008;velY=dy*.006;
+  targetRY+=dx*.008;targetRX+=dy*.006;
+  targetRX=Math.max(-1.2,Math.min(1.2,targetRX));
+  lastX=e.clientX;lastY=e.clientY;
+});
+window.addEventListener('mouseup',()=>{isDragging=false;cv.style.cursor='';});
+
+// Touch drag
+cv.addEventListener('touchstart',e=>{
+  isDragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;velX=0;velY=0;
+},{passive:true});
+cv.addEventListener('touchmove',e=>{
+  if(!isDragging)return;
+  const dx=e.touches[0].clientX-lastX,dy=e.touches[0].clientY-lastY;
+  velX=dx*.008;velY=dy*.006;
+  targetRY+=dx*.008;targetRX+=dy*.006;
+  targetRX=Math.max(-1.2,Math.min(1.2,targetRX));
+  lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
+},{passive:true});
+cv.addEventListener('touchend',()=>isDragging=false);
+
+// Mouse parallax when not dragging
+document.addEventListener('mousemove',e=>{
+  if(isDragging||!mouseOverHero)return;
+  const mx=(e.clientX/window.innerWidth-.5)*.25;
+  const my=(e.clientY/window.innerHeight-.5)*.15;
+  targetRY=ry+mx;
+  targetRX=Math.max(-1.2,Math.min(1.2,rx+my*.3));
+});
+
+function pt(la,lo,r){
+  const LAT=la*Math.PI/180,LON=(lo)*Math.PI/180+ry;
+  const x=r*Math.cos(LAT)*Math.sin(LON);
+  const y=r*(Math.sin(LAT)*Math.cos(rx)-Math.cos(LAT)*Math.cos(LON)*Math.sin(rx));
+  const z=r*(Math.sin(LAT)*Math.sin(rx)+Math.cos(LAT)*Math.cos(LON)*Math.cos(rx));
+  return{x:W/2+x,y:H/2-y,z,v:z>-r*.1};
+}
+
+// Arc interpolation
+function ptArc(la1,lo1,la2,lo2,t,r){
+  const la=la1+(la2-la1)*t;
+  const lo=lo1+(lo2-lo1)*t;
+  const arc=Math.sin(t*Math.PI)*0.3;
+  return pt(la,lo,r*(1+arc));
+}
+
+let arcPhase=0;
+
+function drawGlobe(){
+  cx.clearRect(0,0,W,H);
+
+  // Smooth rotation
+  if(!isDragging){
+    if(!mouseOverHero){
+      targetRY+=.0015; // auto-rotate
+      velX*=.95;velY*=.95;
+      targetRY+=velX;targetRX+=velY;
     }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.card, .stat, .category-card').forEach(el => observer.observe(el));
-
-// Counter animation
-function animateCounter(el) {
-  const target = parseInt(el.getAttribute('data-target'));
-  const prefix = el.getAttribute('data-prefix') || '';
-  const suffix = el.getAttribute('data-suffix') || '';
-  const duration = 2000;
-  const start = performance.now();
-
-  function update(time) {
-    const elapsed = time - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.floor(eased * target);
-    el.textContent = prefix + current + suffix;
-    if (progress < 1) requestAnimationFrame(update);
-    else el.textContent = prefix + target + suffix;
   }
-  requestAnimationFrame(update);
-}
+  ry+=(targetRY-ry)*.06;
+  rx+=(targetRX-rx)*.06;
+  targetRX=Math.max(-1.2,Math.min(1.2,targetRX));
 
-const statsObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      const numbers = entry.target.querySelectorAll('.stat-number');
-      numbers.forEach(n => animateCounter(n));
-      statsObserver.unobserve(entry.target);
+  const R=Math.min(W,H)*.36;
+  arcPhase+=.012;
+
+  // Outer atmosphere glow
+  const atmo=cx.createRadialGradient(W/2,H/2,R*.75,W/2,H/2,R*1.3);
+  atmo.addColorStop(0,'rgba(168,213,162,.04)');
+  atmo.addColorStop(0.6,'rgba(91,200,192,.015)');
+  atmo.addColorStop(1,'transparent');
+  cx.fillStyle=atmo;
+  cx.beginPath();cx.arc(W/2,H/2,R*1.3,0,Math.PI*2);cx.fill();
+
+  // Inner glow
+  const inner=cx.createRadialGradient(W/2-R*.15,H/2-R*.1,0,W/2,H/2,R);
+  inner.addColorStop(0,'rgba(168,213,162,.06)');
+  inner.addColorStop(1,'rgba(168,213,162,.01)');
+  cx.fillStyle=inner;
+  cx.beginPath();cx.arc(W/2,H/2,R,0,Math.PI*2);cx.fill();
+
+  // Latitude lines
+  for(let lat=-75;lat<=75;lat+=15){
+    cx.beginPath();let f=true;
+    for(let lon=0;lon<=360;lon+=3){
+      const p=pt(lat,lon,R);
+      if(p.v){
+        const d=(p.z/R+1)/2;
+        cx.strokeStyle=`rgba(168,213,162,${.04+d*.1})`;
+        cx.lineWidth=d*.6+.15;
+        f?cx.moveTo(p.x,p.y):cx.lineTo(p.x,p.y);f=false;
+      }else{cx.stroke();cx.beginPath();f=true;}
+    }cx.stroke();
+  }
+
+  // Longitude lines
+  for(let lon=0;lon<360;lon+=15){
+    cx.beginPath();let f=true;
+    for(let lat=-90;lat<=90;lat+=3){
+      const p=pt(lat,lon,R);
+      if(p.v){
+        const d=(p.z/R+1)/2;
+        cx.strokeStyle=`rgba(168,213,162,${.035+d*.09})`;
+        cx.lineWidth=d*.5+.1;
+        f?cx.moveTo(p.x,p.y):cx.lineTo(p.x,p.y);f=false;
+      }else{cx.stroke();cx.beginPath();f=true;}
+    }cx.stroke();
+  }
+
+  // Animated arcs between cities
+  ARCS.forEach((arc,i)=>{
+    const c1=CITIES[arc[0]],c2=CITIES[arc[1]];
+    const offset=(i/ARCS.length)*Math.PI*2;
+    const progress=(Math.sin(arcPhase+offset)+1)/2;
+    const tailLen=0.35;
+    const head=progress;
+    const tail=Math.max(0,progress-tailLen);
+
+    const steps=40;
+    cx.beginPath();let f=true;
+    for(let s=tail;s<=head;s+=1/steps){
+      const p=ptArc(c1.lat,c1.lon,c2.lat,c2.lon,s,R);
+      if(p.v){
+        const alpha=((s-tail)/tailLen)*0.5;
+        cx.strokeStyle=`rgba(168,213,162,${alpha})`;
+        cx.lineWidth=1;
+        f?cx.moveTo(p.x,p.y):cx.lineTo(p.x,p.y);f=false;
+      }else f=true;
     }
+    cx.stroke();
   });
-}, { threshold: 0.3 });
 
-document.querySelectorAll('#stats').forEach(el => statsObserver.observe(el));
+  // City dots
+  CITIES.forEach(city=>{
+    const p=pt(city.lat,city.lon,R);
+    if(!p.v)return;
+    const d=(p.z/R+1)/2;
+    const pulse=Math.sin(arcPhase*2+city.lon*.05)*0.4+0.6;
 
-// Category card 3D tilt
-document.querySelectorAll('.category-card').forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `perspective(1000px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
+    // Outer ring
+    cx.beginPath();
+    cx.arc(p.x,p.y,3.5*d*pulse,0,Math.PI*2);
+    cx.strokeStyle=`rgba(168,213,162,${d*.35})`;
+    cx.lineWidth=.8;
+    cx.stroke();
+
+    // Inner dot
+    cx.beginPath();
+    cx.arc(p.x,p.y,1.5*d,0,Math.PI*2);
+    cx.fillStyle=`rgba(168,213,162,${d*.8})`;
+    cx.fill();
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-});
+
+  // Equator highlight
+  cx.beginPath();let f=true;
+  for(let lon=0;lon<=360;lon+=2){
+    const p=pt(0,lon,R);
+    if(p.v){
+      const d=(p.z/R+1)/2;
+      cx.strokeStyle=`rgba(91,200,192,${.06+d*.1})`;
+      cx.lineWidth=d*.8+.2;
+      f?cx.moveTo(p.x,p.y):cx.lineTo(p.x,p.y);f=false;
+    }else{cx.stroke();cx.beginPath();f=true;}
+  }cx.stroke();
+
+  requestAnimationFrame(drawGlobe);
+}
+drawGlobe();
+
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>50));
+function goto(id,btn){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+
+function sub(){const e=document.getElementById('nl-email').value;if(!e||!e.includes('@'))return;document.getElementById('nl-email').value='';alert('Thanks for subscribing!');}
 </script>
 </body>
 </html>
