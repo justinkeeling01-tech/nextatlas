@@ -226,7 +226,7 @@ footer{padding:44px 56px;border-top:1px solid var(--border);display:flex;align-i
 <div class="wrap"><div class="sec">
   <div class="sec-hd">
     <div><span class="sec-eyebrow">Newsletter Archive</span><h2 class="sec-t">Past Issues</h2></div>
-    <a href="https://nextatlas.beehiiv.com" target="_blank" class="sec-more">View on Beehiiv &rarr;</a>
+    <a href="https://nextatlas.beehiiv.com/p/kalshi-just-hit-1b-a-week-here-s-what-that-means" target="_blank" class="sec-more">View on Beehiiv &rarr;</a>
   </div>
   <div class="issues-grid" id="issues-grid">
     <!-- Issues loaded from ISSUES data below -->
@@ -736,9 +736,9 @@ function renderIssues() {
   // Sort newest first
   const sorted = [...ISSUES].sort((a,b) => b.num - a.num);
   grid.innerHTML = sorted.map(issue => `
-    <a class="issue-card" href="${issue.url}" target="_blank">
+    <a class="issue-card" href="${issue.url}" target="_blank" rel="noopener">
       <span class="issue-num">Issue #${issue.num}</span>
-      <div class="issue-title">${issue.title.replace(/^Issue #\d+ — /, '')}</div>
+      <div class="issue-title">${issue.title}</div>
       <div class="issue-summary">${issue.summary}</div>
       <div class="issue-foot">
         <span class="issue-date">${issue.date}</span>
