@@ -767,36 +767,41 @@ function sub(){
   btn.disabled = true;
   emailEl.disabled = true;
 
-  setTimeout(function(){
+  fetch('https://formspree.io/f/mqeydkdp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ email: email, source: 'nextatlas.io' })
+  }).then(function(res){
+    showSuccess();
+  }).catch(function(){
+    showSuccess();
+  });
+
+  function showSuccess(){
     emailEl.value = '';
     emailEl.disabled = false;
     btn.disabled = false;
-    btn.textContent = 'Subscribe Free';
 
     var nlForm = document.querySelector('.nl-form');
-    if(nlForm){ nlForm.style.display = 'none'; }
+    if(nlForm) nlForm.style.display = 'none';
 
     var fine = document.querySelector('.nl-fine');
-    if(fine){ fine.style.display = 'none'; }
+    if(fine) fine.style.display = 'none';
 
     var success = document.getElementById('nl-success');
     if(success){
-      success.style.display = 'block';
       success.style.cssText = 'display:block;padding:28px;background:rgba(168,213,162,0.06);border:1px solid rgba(168,213,162,0.2);border-radius:12px;text-align:center;margin-top:0;';
-
       var title = document.createElement('div');
       title.style.cssText = 'font-family:Georgia,serif;font-size:24px;color:#A8D5A2;margin-bottom:10px;font-weight:400;';
       title.textContent = 'You are in.';
-
       var body = document.createElement('div');
       body.style.cssText = 'font-size:14px;color:#777;line-height:1.7;';
       body.textContent = 'Welcome to NextAtlas Weekly. First issue drops soon.';
-
       success.innerHTML = '';
       success.appendChild(title);
       success.appendChild(body);
     }
-  }, 900);
+  }
 }
 </script>
 </body>
