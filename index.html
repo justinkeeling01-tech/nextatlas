@@ -755,53 +755,64 @@ window.addEventListener('scroll',()=>document.getElementById('nav').classList.to
 function goto(id,btn){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth'});}
 
 function sub(){
-  const emailEl = document.getElementById('nl-email');
-  const btn = document.getElementById('nl-btn');
-  const email = emailEl.value.trim();
+  var emailEl = document.getElementById('nl-email');
+  var btn = document.getElementById('nl-btn');
+  var email = emailEl.value.trim();
 
   if(!email || !email.includes('@') || !email.includes('.')){
     emailEl.style.borderColor = '#FF6B6B';
-    emailEl.style.boxShadow = '0 0 0 2px rgba(255,107,107,0.15)';
-    setTimeout(()=>{emailEl.style.borderColor='';emailEl.style.boxShadow='';}, 2000);
+    setTimeout(function(){ emailEl.style.borderColor=''; }, 2000);
     return;
   }
 
-  // Open Beehiiv in a modal overlay — keeps user on the site
-  const overlay = document.createElement('div');
-  overlay.id = 'bh-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);';
+  btn.textContent = 'Subscribing...';
+  btn.disabled = true;
+  emailEl.disabled = true;
 
-  const box = document.createElement('div');
-  box.style.cssText = 'background:#0e0e0e;border:1px solid rgba(168,213,162,0.2);border-radius:16px;width:90%;max-width:520px;overflow:hidden;position:relative;';
+  var iframe = document.createElement('iframe');
+  iframe.name = 'bh-hidden';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
 
-  const close = document.createElement('button');
-  close.innerHTML = '&#x2715;';
-  close.style.cssText = 'position:absolute;top:14px;right:16px;background:none;border:none;color:#777;font-size:18px;cursor:pointer;z-index:1;';
-  close.onclick = () => document.body.removeChild(overlay);
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://nextatlas.beehiiv.com/subscribe';
+  form.target = 'bh-hidden';
+  form.style.display = 'none';
 
-  const frame = document.createElement('iframe');
-  frame.src = 'https://nextatlas.beehiiv.com/subscribe?email=' + encodeURIComponent(email);
-  frame.style.cssText = 'width:100%;height:500px;border:none;display:block;';
-  frame.allow = 'fullscreen';
+  var e1 = document.createElement('input');
+  e1.name = 'email';
+  e1.value = email;
+  form.appendChild(e1);
+  document.body.appendChild(form);
+  form.submit();
 
-  box.appendChild(close);
-  box.appendChild(frame);
-  overlay.appendChild(box);
-
-  // Close on background click
-  overlay.addEventListener('click', e => { if(e.target === overlay) document.body.removeChild(overlay); });
-  document.addEventListener('keydown', e => { if(e.key==='Escape' && document.getElementById('bh-overlay')) document.body.removeChild(overlay); });
-
-  document.body.appendChild(overlay);
-  document.body.style.overflow = 'hidden';
-  overlay.addEventListener('remove', () => document.body.style.overflow = '');
-
-  // Also show success state on the page
-  setTimeout(()=>{
+  setTimeout(function(){
     emailEl.value = '';
-    btn.style.display = 'none';
-    document.getElementById('nl-success').style.display = 'block';
-  }, 800);
+    emailEl.disabled = false;
+    try { document.body.removeChild(form); } catch(ex){}
+    try { document.body.removeChild(iframe); } catch(ex){}
+
+    var nlForm = document.querySelector('.nl-form');
+    if(nlForm) nlForm.style.display = 'none';
+
+    var success = document.getElementById('nl-success');
+    if(success){
+      success.style.display = 'block';
+      var msg = document.createElement('div');
+      msg.style.cssText = 'padding:24px 28px;background:rgba(168,213,162,0.07);border:1px solid rgba(168,213,162,0.25);border-radius:12px;text-align:center;';
+      var title = document.createElement('div');
+      title.style.cssText = 'font-family:Georgia,serif;font-size:22px;color:#A8D5A2;margin-bottom:8px;';
+      title.textContent = 'You are in.';
+      var sub = document.createElement('div');
+      sub.style.cssText = 'font-size:13px;color:#777;line-height:1.6;';
+      sub.textContent = 'Welcome to NextAtlas Weekly. Check your inbox for a confirmation.';
+      msg.appendChild(title);
+      msg.appendChild(sub);
+      success.innerHTML = '';
+      success.appendChild(msg);
+    }
+  }, 1000);
 }
 </script>
 </body>
