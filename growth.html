@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NextAtlas Growth — AI-Powered Growth for Fintech & Financial Brands</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#A8D5A2;--gb:#C8F0C0;--teal:#5BC8C0;--gold:#E8C84A;--coral:#FF6B6B;
+  --black:#040404;--dark:#0a0a0a;--card:#0e0e0e;--card2:#111;
+  --border:rgba(255,255,255,0.06);--borderg:rgba(168,213,162,0.15);
+  --white:#f8f8f8;--dim:#444;--mid:#777;
+  --serif:'Playfair Display',Georgia,serif;--sans:'Inter',system-ui,sans-serif
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;background:rgba(4,4,4,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:26px;height:26px}
+.logo-word{font-family:var(--serif);font-size:17px;letter-spacing:.18em;color:var(--g);font-weight:500}
+.logo-sub{font-size:11px;color:var(--mid);letter-spacing:.12em;text-transform:uppercase;margin-left:2px}
+.nav-r{display:flex;align-items:center;gap:16px}
+.nav-back{font-size:12px;color:var(--mid);text-decoration:none;letter-spacing:.04em;transition:color .2s}
+.nav-back:hover{color:var(--g)}
+.nav-cta{padding:9px 20px;background:var(--g);color:#000;border:none;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:background .2s;text-decoration:none}
+.nav-cta:hover{background:var(--gb)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;padding:80px 32px 60px;overflow:hidden}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 45%,rgba(168,213,162,.06) 0%,transparent 65%),radial-gradient(ellipse 30% 30% at 80% 20%,rgba(91,200,192,.04) 0%,transparent 60%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-inner{position:relative;z-index:2;text-align:center;max-width:900px}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--borderg);border-radius:4px;padding:6px 16px;margin-bottom:40px;font-size:11px;font-weight:500;letter-spacing:.14em;color:var(--g);text-transform:uppercase;background:rgba(168,213,162,.04);opacity:0;animation:fu .7s ease .1s forwards}
+.badge-dot{width:5px;height:5px;background:var(--g);border-radius:50%;animation:pulse 2.2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-h{font-family:var(--serif);font-size:clamp(44px,6vw,82px);font-weight:400;line-height:1.05;letter-spacing:-.025em;margin-bottom:28px;opacity:0;animation:fu .7s ease .3s forwards}
+.hero-h .w1{color:var(--white)}
+.hero-h .w2{color:var(--g);font-style:italic}
+.hero-p{font-size:17px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:50px;max-width:640px;margin-left:auto;margin-right:auto;opacity:0;animation:fu .7s ease .5s forwards}
+.hero-p b{color:rgba(248,248,248,.85);font-weight:500}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fu .7s ease .7s forwards}
+.btn-a{padding:14px 32px;background:var(--g);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:.03em;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-a:hover{background:var(--gb);transform:translateY(-2px)}
+.btn-b{padding:14px 32px;background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:13px;font-weight:400;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-b:hover{border-color:rgba(255,255,255,.25);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:48px;justify-content:center;margin-top:72px;opacity:0;animation:fu .7s ease .9s forwards;padding-top:48px;border-top:1px solid var(--border)}
+.stat-n{font-family:var(--serif);font-size:32px;font-weight:400;color:var(--g);display:block;line-height:1}
+.stat-l{font-size:10px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-top:6px}
+
+/* SECTIONS */
+section{padding:100px 32px;max-width:1100px;margin:0 auto}
+.sec-eyebrow{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--g);display:block;margin-bottom:12px}
+.sec-t{font-family:var(--serif);font-size:clamp(28px,3vw,42px);font-weight:400;color:var(--white);letter-spacing:-.02em;line-height:1.2}
+.sec-sub{font-size:16px;color:var(--mid);line-height:1.75;margin-top:16px;max-width:560px}
+
+/* HOW IT WORKS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:60px}
+.step{background:var(--card);padding:36px 32px;position:relative;transition:background .2s}
+.step:hover{background:var(--card2)}
+.step-day{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-bottom:16px}
+.step-num{font-family:var(--serif);font-size:48px;color:rgba(168,213,162,.08);position:absolute;top:20px;right:24px;line-height:1;font-weight:400}
+.step-title{font-family:var(--serif);font-size:20px;color:var(--white);margin-bottom:10px;font-weight:400}
+.step-desc{font-size:13px;color:var(--mid);line-height:1.7}
+.step-time{display:inline-block;margin-top:16px;font-size:11px;color:var(--dim);letter-spacing:.06em;padding:4px 10px;border:1px solid var(--border);border-radius:4px}
+
+/* TIERS */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:60px}
+@media(max-width:768px){.tiers{grid-template-columns:1fr}}
+.tier{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px 32px;position:relative;transition:all .25s;cursor:default}
+.tier:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.1)}
+.tier.featured{border-color:var(--borderg);background:linear-gradient(135deg,rgba(168,213,162,.04),rgba(4,4,4,0))}
+.tier.featured::before{content:'Most Popular';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--g);color:#000;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:0 0 8px 8px}
+.tier-name{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--white);margin-bottom:6px}
+.tier-price{font-family:var(--serif);font-size:42px;color:var(--g);font-weight:400;line-height:1;margin:20px 0 4px}
+.tier-period{font-size:12px;color:var(--mid)}
+.tier-desc{font-size:13px;color:var(--mid);line-height:1.65;margin:16px 0 24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.tier-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.tier-features li{font-size:13px;color:var(--mid);display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.tier-features li::before{content:'→';color:var(--g);font-size:12px;flex-shrink:0;margin-top:1px}
+.tier-btn{width:100%;padding:13px;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:.03em;cursor:pointer;transition:all .2s;text-decoration:none;display:block;text-align:center}
+.tier-btn.primary{background:var(--g);color:#000;border:none}
+.tier-btn.primary:hover{background:var(--gb)}
+.tier-btn.secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.12)}
+.tier-btn.secondary:hover{border-color:rgba(255,255,255,.25)}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:60px}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;transition:all .25s}
+.result-card:hover{border-color:var(--borderg);transform:translateY(-3px)}
+.result-num{font-family:var(--serif);font-size:48px;color:var(--g);font-weight:400;line-height:1;margin-bottom:8px}
+.result-label{font-size:14px;color:var(--white);font-weight:500;margin-bottom:6px}
+.result-sub{font-size:13px;color:var(--mid);line-height:1.6}
+
+/* WHO */
+.who-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:60px}
+.who-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;transition:border-color .2s}
+.who-card:hover{border-color:var(--borderg)}
+.who-icon{font-size:28px;margin-bottom:14px}
+.who-title{font-family:var(--serif);font-size:18px;color:var(--white);margin-bottom:8px;font-weight:400}
+.who-desc{font-size:13px;color:var(--mid);line-height:1.65}
+
+/* TOOLS */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:48px}
+.tool-pill{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+.tool-pill:hover{border-color:var(--borderg)}
+.tool-name{font-size:13px;color:var(--white);font-weight:500}
+.tool-purpose{font-size:11px;color:var(--dim);margin-top:2px}
+.tool-cost{font-size:10px;color:var(--g);margin-top:4px;font-weight:500}
+
+/* CTA */
+.cta-section{background:linear-gradient(135deg,rgba(168,213,162,.05),rgba(4,4,4,0));border:1px solid var(--borderg);border-radius:20px;padding:72px 48px;text-align:center;margin:0 auto 100px;max-width:1100px}
+.cta-h{font-family:var(--serif);font-size:clamp(32px,4vw,52px);color:var(--white);font-weight:400;letter-spacing:-.02em;margin-bottom:16px}
+.cta-sub{font-size:16px;color:var(--mid);line-height:1.7;max-width:520px;margin:0 auto 40px}
+.cta-note{font-size:12px;color:var(--dim);margin-top:16px;letter-spacing:.04em}
+
+/* FORM */
+.contact-form{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-input{width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-size:13px;color:var(--white);font-family:var(--sans);transition:border-color .2s;outline:none}
+.form-input:focus{border-color:var(--borderg)}
+.form-input::placeholder{color:var(--dim)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23444' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.form-submit{padding:14px;background:var(--g);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:.03em;cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.form-submit:hover{background:var(--gb)}
+#form-success{display:none;padding:20px;background:rgba(168,213,162,.06);border:1px solid var(--borderg);border-radius:10px;text-align:center}
+#form-success .fs-title{font-family:var(--serif);font-size:22px;color:var(--g);margin-bottom:8px}
+#form-success .fs-sub{font-size:13px;color:var(--mid)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto}
+.fcopy{font-size:11px;color:var(--dim)}
+.flinks{display:flex;gap:24px;list-style:none}
+.flinks a{font-size:12px;color:var(--dim);text-decoration:none;transition:color .2s}
+.flinks a:hover{color:var(--g)}
+
+@media(max-width:600px){
+  .hero-stats{gap:24px;flex-wrap:wrap}
+  .form-row{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:16px;text-align:center}
+  .cta-section{padding:48px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">
+    <svg class="logo-icon" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="13" cy="13" r="11.5" stroke="#A8D5A2" stroke-width="1"/>
+      <ellipse cx="13" cy="13" rx="5.5" ry="11.5" stroke="#A8D5A2" stroke-width=".8" opacity=".6"/>
+      <line x1="1.5" y1="13" x2="24.5" y2="13" stroke="#A8D5A2" stroke-width=".8" opacity=".4"/>
+      <line x1="1.5" y1="9" x2="24.5" y2="9" stroke="#A8D5A2" stroke-width=".6" opacity=".25"/>
+      <line x1="1.5" y1="17" x2="24.5" y2="17" stroke="#A8D5A2" stroke-width=".6" opacity=".25"/>
+    </svg>
+    <span class="logo-word">NEXTATLAS</span>
+    <span class="logo-sub">/ Growth</span>
+  </a>
+  <div class="nav-r">
+    <a href="/" class="nav-back">← Back to Platform</a>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      AI-Powered Growth Agency for Fintech &amp; Financial Brands
+    </div>
+    <h1 class="hero-h">
+      <span class="w1">Grow your brand.</span><br>
+      <span class="w2">Without the agency overhead.</span>
+    </h1>
+    <p class="hero-p">
+      NextAtlas Growth handles <b>lead generation, SEO content, and brand content</b> for fintech and financial services companies — fully AI-powered, at a fraction of what traditional agencies charge.
+    </p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-a">Work With Us</a>
+      <a href="#tiers" class="btn-b">See Pricing</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="stat-n">$37/mo</span>
+        <span class="stat-l">Total Tool Cost</span>
+      </div>
+      <div>
+        <span class="stat-n">4 hrs</span>
+        <span class="stat-l">Per Client Per Week</span>
+      </div>
+      <div>
+        <span class="stat-n">$4,500</span>
+        <span class="stat-l">Full Stack Price</span>
+      </div>
+      <div>
+        <span class="stat-n">2 weeks</span>
+        <span class="stat-l">To First Results</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section>
+  <span class="sec-eyebrow">How It Works</span>
+  <h2 class="sec-t">A full growth operation.<br>Running every week.</h2>
+  <p class="sec-sub">We run on a consistent weekly rhythm so your pipeline never goes cold and your content never goes quiet.</p>
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">01</span>
+      <div class="step-day">Monday</div>
+      <div class="step-title">Lead Generation</div>
+      <p class="step-desc">Apollo pulls fresh leads. Claude personalizes every outreach email. Instantly sends the sequence automatically. Your pipeline fills while you sleep.</p>
+      <span class="step-time">~45 min / week</span>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <div class="step-day">Tue — Wed</div>
+      <div class="step-title">SEO Content</div>
+      <p class="step-desc">1–2 blog posts per week targeting keywords your clients are actually searching. Written by Claude, edited for accuracy, uploaded to your CMS.</p>
+      <span class="step-time">~1.5 hrs / week</span>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <div class="step-day">Thursday</div>
+      <div class="step-title">Brand Content</div>
+      <p class="step-desc">3 LinkedIn posts. 1 newsletter issue if applicable. Scheduled via Buffer. Consistent brand presence across every platform, every week.</p>
+      <span class="step-time">~1 hr / week</span>
+    </div>
+    <div class="step">
+      <span class="step-num">04</span>
+      <div class="step-day">Friday</div>
+      <div class="step-title">Reporting</div>
+      <p class="step-desc">Keyword rankings from Google Search Console. Email open rates from Instantly. One clean one-pager delivered to your inbox every Friday.</p>
+      <span class="step-time">~30 min / week</span>
+    </div>
+  </div>
+</section>
+
+<!-- TIERS -->
+<section id="tiers">
+  <span class="sec-eyebrow">Pricing</span>
+  <h2 class="sec-t">Simple pricing.<br>Real results.</h2>
+  <p class="sec-sub">Most clients start at Starter, see results within 30 days, and upgrade. That's intentional.</p>
+  <div class="tiers">
+    <div class="tier">
+      <div class="tier-name">Starter</div>
+      <div class="tier-price">$1,000</div>
+      <div class="tier-period">per month</div>
+      <p class="tier-desc">SEO content only. Perfect for companies that need consistent, high-quality content to rank and build authority.</p>
+      <ul class="tier-features">
+        <li>4 SEO blog posts per month</li>
+        <li>Keyword research and targeting</li>
+        <li>Uploaded to your CMS</li>
+        <li>Monthly performance report</li>
+      </ul>
+      <a href="#contact" class="tier-btn secondary">Get Started</a>
+    </div>
+    <div class="tier featured">
+      <div class="tier-name">Growth</div>
+      <div class="tier-price">$2,500</div>
+      <div class="tier-period">per month</div>
+      <p class="tier-desc">SEO content plus brand content. LinkedIn presence and email newsletter to keep your audience engaged every week.</p>
+      <ul class="tier-features">
+        <li>4 SEO blog posts per month</li>
+        <li>12 LinkedIn posts per month</li>
+        <li>Monthly newsletter issue</li>
+        <li>Content calendar and scheduling</li>
+        <li>Weekly performance report</li>
+      </ul>
+      <a href="#contact" class="tier-btn primary">Get Started</a>
+    </div>
+    <div class="tier">
+      <div class="tier-name">Full Stack</div>
+      <div class="tier-price">$4,500</div>
+      <div class="tier-period">per month</div>
+      <p class="tier-desc">Everything. Lead generation, SEO, brand content, and reporting. A complete growth operation under one roof.</p>
+      <ul class="tier-features">
+        <li>All Growth tier deliverables</li>
+        <li>Weekly outbound lead gen campaigns</li>
+        <li>Personalized email sequences</li>
+        <li>Apollo list building</li>
+        <li>Weekly reporting dashboard</li>
+        <li>Monthly strategy call</li>
+      </ul>
+      <a href="#contact" class="tier-btn secondary">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section>
+  <span class="sec-eyebrow">Who It's For</span>
+  <h2 class="sec-t">Built for fintech.<br>Made for financial brands.</h2>
+  <p class="sec-sub">If you're in financial services and need a growth engine — without hiring a full team — this is for you.</p>
+  <div class="who-grid">
+    <div class="who-card">
+      <div class="who-icon">📊</div>
+      <div class="who-title">Financial Advisors</div>
+      <p class="who-desc">Build your personal brand, generate leads, and grow your AUM with consistent LinkedIn presence and SEO content.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🏦</div>
+      <div class="who-title">Fintech Startups</div>
+      <p class="who-desc">Get the content and lead gen engine of a 5-person marketing team for a fraction of the cost. Move fast, look credible.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">💼</div>
+      <div class="who-title">RIAs & Wealth Firms</div>
+      <p class="who-desc">Attract high-net-worth clients through SEO-driven content and consistent brand presence across every digital channel.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🚀</div>
+      <div class="who-title">Finance Founders</div>
+      <p class="who-desc">You're building something. We handle the growth so you can focus on the product. Fast, lean, and actually effective.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section>
+  <span class="sec-eyebrow">What to Expect</span>
+  <h2 class="sec-t">Results you can<br>actually measure.</h2>
+  <div class="results-grid">
+    <div class="result-card">
+      <div class="result-num">30</div>
+      <div class="result-label">Days to First Results</div>
+      <p class="result-sub">Most clients see measurable improvements in reach, leads, or search rankings within the first month.</p>
+    </div>
+    <div class="result-card">
+      <div class="result-num">3×</div>
+      <div class="result-label">LinkedIn Reach Growth</div>
+      <p class="result-sub">Consistent posting with sharp fintech content drives compounding reach with every issue.</p>
+    </div>
+    <div class="result-card">
+      <div class="result-num">20+</div>
+      <div class="result-label">Qualified Leads per Month</div>
+      <p class="result-sub">Personalized outbound campaigns targeting your exact ICP. No cold blasting. Real conversations.</p>
+    </div>
+    <div class="result-card">
+      <div class="result-num">4 hrs</div>
+      <div class="result-label">Your Time Per Week</div>
+      <p class="result-sub">We handle the execution. You review, approve, and close. That's it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section>
+  <span class="sec-eyebrow">The Stack</span>
+  <h2 class="sec-t">Lean tools.<br>Maximum output.</h2>
+  <p class="sec-sub">We use the best tools available and pass the savings directly to you.</p>
+  <div class="tools-grid">
+    <div class="tool-pill">
+      <div>
+        <div class="tool-name">Claude AI</div>
+        <div class="tool-purpose">All content</div>
+        <div class="tool-cost">Included</div>
+      </div>
+    </div>
+    <div class="tool-pill">
+      <div>
+        <div class="tool-name">Apollo.io</div>
+        <div class="tool-purpose">Lead finding</div>
+        <div class="tool-cost">Free tier</div>
+      </div>
+    </div>
+    <div class="tool-pill">
+      <div>
+        <div class="tool-name">Instantly.ai</div>
+        <div class="tool-purpose">Email automation</div>
+        <div class="tool-cost">$37/mo</div>
+      </div>
+    </div>
+    <div class="tool-pill">
+      <div>
+        <div class="tool-name">Buffer</div>
+        <div class="tool-purpose">Social scheduling</div>
+        <div class="tool-cost">Free tier</div>
+      </div>
+    </div>
+    <div class="tool-pill">
+      <div>
+        <div class="tool-name">Ubersuggest</div>
+        <div class="tool-purpose">Keyword research</div>
+        <div class="tool-cost">Free</div>
+      </div>
+    </div>
+    <div class="tool-pill">
+      <div>
+        <div class="tool-name">Google Search Console</div>
+        <div class="tool-purpose">SEO tracking</div>
+        <div class="tool-cost">Free</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / CTA -->
+<div class="cta-section" id="contact">
+  <h2 class="cta-h">Ready to grow?</h2>
+  <p class="cta-sub">Tell us about your business and we'll reach out within 24 hours to see if we're a fit.</p>
+  <div class="contact-form">
+    <div class="form-row">
+      <input type="text" class="form-input" id="cf-name" placeholder="Your name" required>
+      <input type="email" class="form-input" id="cf-email" placeholder="Email address" required>
+    </div>
+    <input type="text" class="form-input" id="cf-company" placeholder="Company or brand name">
+    <select class="form-input form-select" id="cf-tier">
+      <option value="" disabled selected>Which tier interests you?</option>
+      <option>Starter — $1,000/mo</option>
+      <option>Growth — $2,500/mo</option>
+      <option>Full Stack — $4,500/mo</option>
+      <option>Not sure yet — let's talk</option>
+    </select>
+    <textarea class="form-input" id="cf-msg" placeholder="Tell us about your business in 2-3 sentences..." style="height:90px;resize:vertical"></textarea>
+    <button class="form-submit" onclick="submitForm()">Send Message →</button>
+    <div id="form-success">
+      <div class="fs-title">Message received.</div>
+      <div class="fs-sub">We'll be in touch within 24 hours.</div>
+    </div>
+  </div>
+  <p class="cta-note">No contracts. No retainer lock-in. Cancel anytime.</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="/" class="logo" style="text-decoration:none">
+    <svg style="width:20px;height:20px" viewBox="0 0 26 26" fill="none">
+      <circle cx="13" cy="13" r="11.5" stroke="#A8D5A2" stroke-width="1"/>
+      <ellipse cx="13" cy="13" rx="5.5" ry="11.5" stroke="#A8D5A2" stroke-width=".8" opacity=".6"/>
+      <line x1="1.5" y1="13" x2="24.5" y2="13" stroke="#A8D5A2" stroke-width=".8" opacity=".4"/>
+    </svg>
+    <span class="logo-word" style="font-size:14px">NEXTATLAS</span>
+  </a>
+  <ul class="flinks">
+    <li><a href="/">Platform</a></li>
+    <li><a href="#tiers">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://x.com/nextatlas_io" target="_blank">Twitter</a></li>
+    <li><a href="https://www.linkedin.com/company/nextatlas-weekly" target="_blank">LinkedIn</a></li>
+  </ul>
+  <span class="fcopy">© 2026 NextAtlas. All rights reserved.</span>
+</footer>
+
+<script>
+function submitForm(){
+  var name = document.getElementById('cf-name').value.trim();
+  var email = document.getElementById('cf-email').value.trim();
+  var company = document.getElementById('cf-company').value.trim();
+  var tier = document.getElementById('cf-tier').value;
+  var msg = document.getElementById('cf-msg').value.trim();
+
+  if(!name || !email || !email.includes('@')){
+    alert('Please fill in your name and email.');
+    return;
+  }
+
+  // Send to Formspree
+  fetch('https://formspree.io/f/mqeydkdp', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Accept':'application/json'},
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      company: company,
+      tier: tier,
+      message: msg,
+      source: 'NextAtlas Growth Page'
+    })
+  }).catch(function(){});
+
+  // Show success
+  document.querySelector('.contact-form').querySelector('button').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
